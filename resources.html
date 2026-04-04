@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Resources / Cursor Zambia</title>
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .page-hero {
+      padding: 10rem 3rem 4rem;
+      text-align: center;
+    }
+    .page-hero-label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .page-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .page-hero-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* Bookshelf layout */
+    .library {
+      padding: 2rem 3rem 8rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .shelf {
+      margin-bottom: 4rem;
+    }
+
+    .shelf-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .shelf-label-line {
+      width: 30px;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    .shelf-label-text {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+    }
+
+    .shelf-count {
+      margin-left: auto;
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+
+    .books {
+      display: flex;
+      gap: 0;
+      align-items: flex-end;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid var(--color-text);
+      overflow-x: auto;
+    }
+
+    .book {
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+    }
+
+    .book:hover {
+      transform: translateY(-15px);
+    }
+
+    .book-spine {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding: 1.5rem 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-sans);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.85);
+      min-height: 200px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .book-spine::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.15) 100%);
+    }
+
+    .book-tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      padding: 1.2rem;
+      width: 220px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .book:hover .book-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .tooltip-title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 400;
+      margin-bottom: 0.3rem;
+      color: var(--color-text);
+    }
+
+    .tooltip-author {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .tooltip-desc {
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      line-height: 1.6;
+    }
+
+    .tooltip-type {
+      display: inline-block;
+      font-size: 0.55rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      margin-top: 0.75rem;
+    }
+
+    /* Resource detail panel */
+    .resource-panel {
+      position: fixed;
+      top: 0;
+      right: -450px;
+      width: 450px;
+      height: 100vh;
+      background: var(--color-white);
+      z-index: 200;
+      padding: 3rem;
+      overflow-y: auto;
+      transition: right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+    }
+
+    .resource-panel.open {
+      right: 0;
+    }
+
+    .panel-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,26,26,0.3);
+      z-index: 199;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .panel-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .panel-close {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .panel-close:hover { color: var(--color-text); }
+
+    .panel-color-bar {
+      width: 100%;
+      height: 6px;
+      margin-bottom: 2rem;
+      border-radius: 3px;
+    }
+
+    .panel-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    .panel-meta {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--color-text-light);
+      margin-bottom: 2rem;
+    }
+
+    .panel-section-label {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .panel-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel-topic {
+      font-size: 0.65rem;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-light);
+    }
+
+    .panel-difficulty {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 2rem;
+    }
+
+    .diff-bar {
+      width: 30px;
+      height: 4px;
+      background: var(--color-border);
+      border-radius: 2px;
+    }
+
+    .diff-bar.filled {
+      background: var(--color-text);
+    }
+
+    .panel-cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.9rem 2rem;
+      background: var(--color-accent);
+      color: var(--color-white);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .panel-cta:hover { background: #333; }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 8rem 1.5rem 2rem; }
+      .library { padding: 2rem 1.5rem 6rem; }
+      .resource-panel { width: 100%; right: -100%; }
+      .books { gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav scrolled" id="nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="index.html#community" class="nav-link">COMMUNITY</a>
+    </div>
+    <a href="index.html" class="nav-logo">
+      <span class="logo-text">CURSOR</span>
+      <span class="logo-sub">ZAMBIA</span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html#join" class="nav-link">JOIN US</a>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <p class="page-hero-label">03 / LEARNING RESOURCES</p>
+    <h1 class="page-hero-title">The community<br>library</h1>
+    <p class="page-hero-desc">Curated guides, tutorials, and references organized on our virtual bookshelf. Hover to preview, click to dive in.</p>
+  </section>
+
+  <section class="library" id="library"></section>
+
+  <!-- Slide-in Panel -->
+  <div class="panel-backdrop" id="panelBackdrop"></div>
+  <div class="resource-panel" id="resourcePanel">
+    <button class="panel-close" id="panelClose">&times;</button>
+    <div class="panel-color-bar" id="panelColor"></div>
+    <h2 class="panel-title" id="panelTitle"></h2>
+    <p class="panel-meta" id="panelMeta"></p>
+    <p class="panel-desc" id="panelDesc"></p>
+    <p class="panel-section-label">TOPICS COVERED</p>
+    <div class="panel-topics" id="panelTopics"></div>
+    <p class="panel-section-label">DIFFICULTY</p>
+    <div class="panel-difficulty" id="panelDiff"></div>
+    <a href="#" class="panel-cta">Start Learning</a>
+  </div>
+
+  <script>
+    const shelves = [
+      {
+        label: 'GETTING STARTED',
+        books: [
+          { title: 'Cursor 101', author: 'Cursor Zambia', color: '#5a4a3a', width: 45, height: 220, type: 'Guide', desc: 'The definitive beginner guide to Cursor IDE. Learn the interface, AI features, and your first AI-assisted coding session.', topics: ['Setup', 'Interface', 'First Project', 'AI Chat'], difficulty: 1 },
+          { title: 'AI Prompting for Devs', author: 'Mwila K.', color: '#3a4a5a', width: 38, height: 200, type: 'Tutorial', desc: 'Master the art of writing effective prompts that get you better code completions, refactors, and explanations from Cursor AI.', topics: ['Prompting', 'Context', 'Best Practices'], difficulty: 1 },
+          { title: 'Setup Your Workspace', author: 'Bwalya M.', color: '#6a5a4a', width: 32, height: 190, type: 'Guide', desc: 'Configure Cursor for maximum productivity. Extensions, settings, keybindings, and AI rules that top developers use.', topics: ['Configuration', 'Extensions', 'Keybindings'], difficulty: 1 },
+          { title: 'Git + Cursor', author: 'Dalitso Z.', color: '#4a5a3a', width: 40, height: 210, type: 'Tutorial', desc: 'Leverage Cursor AI for better commits, branch management, conflict resolution, and code reviews.', topics: ['Git', 'Version Control', 'Code Review'], difficulty: 2 },
+          { title: 'Your First Extension', author: 'Chisomo N.', color: '#5a3a4a', width: 36, height: 195, type: 'Workshop', desc: 'Build and publish your first Cursor extension in under 2 hours. Step-by-step from scaffolding to marketplace.', topics: ['Extensions', 'TypeScript', 'Publishing'], difficulty: 2 },
+        ]
+      },
+      {
+        label: 'INTERMEDIATE',
+        books: [
+          { title: 'Rules & Context Files', author: 'Mwila K.', color: '#3a5a4a', width: 42, height: 230, type: 'Deep Dive', desc: 'Write powerful .cursorrules and context files that transform how AI understands your codebase, architecture, and conventions.', topics: ['Rules', 'Context', 'AI Training', 'Patterns'], difficulty: 3 },
+          { title: 'Full-Stack with AI', author: 'Thandiwe M.', color: '#4a3a5a', width: 50, height: 240, type: 'Course', desc: 'Build a complete full-stack application using Cursor as your AI pair programmer. React frontend, Node backend, database design.', topics: ['React', 'Node.js', 'Database', 'Deployment'], difficulty: 3 },
+          { title: 'Testing Patterns', author: 'Natasha M.', color: '#5a4a3a', width: 35, height: 205, type: 'Guide', desc: 'Use Cursor to write comprehensive test suites. AI-generated unit tests, integration tests, and E2E testing strategies.', topics: ['Jest', 'Playwright', 'TDD', 'Coverage'], difficulty: 3 },
+          { title: 'Refactoring Mastery', author: 'Dalitso Z.', color: '#3a4a5a', width: 44, height: 225, type: 'Tutorial', desc: 'Advanced refactoring techniques powered by AI. Safely modernize legacy code, improve performance, and reduce technical debt.', topics: ['Refactoring', 'Performance', 'Clean Code'], difficulty: 3 },
+        ]
+      },
+      {
+        label: 'ADVANCED',
+        books: [
+          { title: 'AI Agent Workflows', author: 'Kapembwa S.', color: '#4a5a3a', width: 48, height: 245, type: 'Research', desc: 'Explore multi-step AI agent patterns in Cursor. Autonomous coding, task decomposition, and complex project generation.', topics: ['AI Agents', 'Automation', 'Multi-step', 'MCP'], difficulty: 5 },
+          { title: 'MCP Servers', author: 'Sampa M.', color: '#5a3a4a', width: 40, height: 220, type: 'Deep Dive', desc: 'Build and integrate Model Context Protocol servers to extend Cursor capabilities with custom tools and data sources.', topics: ['MCP', 'Servers', 'API Design', 'Integration'], difficulty: 5 },
+          { title: 'Enterprise Cursor', author: 'Bwalya M.', color: '#3a5a4a', width: 46, height: 235, type: 'Guide', desc: 'Deploying Cursor in team environments. Shared rules, security policies, SOC2 compliance, and organizational AI governance.', topics: ['Teams', 'Security', 'Compliance', 'Governance'], difficulty: 4 },
+        ]
+      }
+    ];
+
+    const library = document.getElementById('library');
+    const panel = document.getElementById('resourcePanel');
+    const backdrop = document.getElementById('panelBackdrop');
+
+    shelves.forEach(shelf => {
+      const section = document.createElement('div');
+      section.className = 'shelf';
+
+      const booksHtml = shelf.books.map(book => `
+        <div class="book" data-book='${JSON.stringify(book).replace(/'/g, "&#39;")}'>
+          <div class="book-spine" style="background:${book.color};width:${book.width}px;min-height:${book.height}px">
+            ${book.title}
+          </div>
+          <div class="book-tooltip">
+            <div class="tooltip-title">${book.title}</div>
+            <div class="tooltip-author">${book.author}</div>
+            <div class="tooltip-desc">${book.desc.substring(0, 80)}...</div>
+            <span class="tooltip-type">${book.type}</span>
+          </div>
+        </div>
+      `).join('');
+
+      section.innerHTML = `
+        <div class="shelf-label">
+          <span class="shelf-label-line"></span>
+          <span class="shelf-label-text">${shelf.label}</span>
+          <span class="shelf-count">${shelf.books.length} resources</span>
+        </div>
+        <div class="books">${booksHtml}</div>
+      `;
+
+      library.appendChild(section);
+    });
+
+    // Click to open panel
+    document.querySelectorAll('.book').forEach(book => {
+      book.addEventListener('click', () => {
+        const data = JSON.parse(book.getAttribute('data-book'));
+        document.getElementById('panelColor').style.background = data.color;
+        document.getElementById('panelTitle').textContent = data.title;
+        document.getElementById('panelMeta').textContent = `${data.type} / By ${data.author}`;
+        document.getElementById('panelDesc').textContent = data.desc;
+        document.getElementById('panelTopics').innerHTML = data.topics.map(t => `<span class="panel-topic">${t}</span>`).join('');
+        document.getElementById('panelDiff').innerHTML = Array.from({length: 5}, (_, i) =>
+          `<span class="diff-bar ${i < data.difficulty ? 'filled' : ''}"></span>`
+        ).join('');
+
+        panel.classList.add('open');
+        backdrop.classList.add('open');
+      });
+    });
+
+    function closePanel() {
+      panel.classList.remove('open');
+      backdrop.classList.remove('open');
+    }
+
+    document.getElementById('panelClose').addEventListener('click', closePanel);
+    backdrop.addEventListener('click', closePanel);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+  </script>
+</body>
+</html>

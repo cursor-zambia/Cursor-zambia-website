@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentorship Program / Cursor Zambia</title>
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .page-hero {
+      padding: 10rem 3rem 4rem;
+      text-align: center;
+    }
+    .page-hero-label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .page-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .page-hero-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* Connection Network */
+    .network-section {
+      padding: 2rem 3rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .pairs-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .pairs-header-line {
+      width: 30px;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    .pairs-header-text {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+    }
+
+    /* Mentor-Mentee Pair Cards */
+    .pairs-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--color-border);
+    }
+
+    .pair-card {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      background: var(--color-white);
+      padding: 2.5rem 3rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .pair-card:hover {
+      background: var(--color-bg);
+    }
+
+    .pair-person {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .pair-person--right {
+      justify-content: flex-end;
+      text-align: right;
+    }
+
+    .pair-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.9);
+      flex-shrink: 0;
+    }
+
+    .pair-name {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 0.15rem;
+    }
+
+    .pair-role {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+
+    .pair-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0 2rem;
+    }
+
+    .connector-line {
+      width: 60px;
+      height: 1px;
+      background: var(--color-border);
+      position: relative;
+    }
+
+    .connector-line::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--color-border);
+      transition: background 0.3s ease;
+    }
+
+    .pair-card:hover .connector-line::before {
+      background: var(--color-text);
+    }
+
+    .connector-label {
+      font-size: 0.5rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+
+    /* Expanded pair detail */
+    .pair-detail {
+      max-height: 0;
+      overflow: hidden;
+      background: var(--color-bg);
+      transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .pair-detail.open {
+      max-height: 500px;
+    }
+
+    .pair-detail-inner {
+      padding: 2rem 3rem 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .detail-col-label {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .detail-quote {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--color-text-light);
+      margin-bottom: 1rem;
+    }
+
+    .detail-focus {
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      line-height: 1.7;
+    }
+
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .detail-tag {
+      font-size: 0.6rem;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+    }
+
+    /* How it works */
+    .how-section {
+      padding: 6rem 3rem 8rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .how-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .how-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .how-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+    }
+
+    .step {
+      text-align: center;
+    }
+
+    .step-number {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--color-border);
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    .step-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 400;
+      margin-bottom: 0.75rem;
+    }
+
+    .step-desc {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      line-height: 1.7;
+    }
+
+    /* CTA */
+    .apply-section {
+      padding: 6rem 3rem;
+      text-align: center;
+      background: var(--color-bg-dark);
+      color: var(--color-white);
+    }
+
+    .apply-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      opacity: 0.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .apply-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .apply-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      opacity: 0.6;
+      max-width: 450px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+
+    .apply-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-light {
+      display: inline-flex;
+      align-items: center;
+      padding: 1rem 2.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: var(--color-white);
+      color: var(--color-accent);
+      border: none;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn-light:hover { opacity: 0.85; }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      padding: 1rem 2.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: none;
+      color: var(--color-white);
+      border: 1px solid rgba(255,255,255,0.25);
+      text-decoration: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.6); }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 8rem 1.5rem 2rem; }
+      .network-section { padding: 2rem 1.5rem 4rem; }
+      .pair-card { grid-template-columns: 1fr; gap: 1rem; padding: 1.5rem; }
+      .pair-person--right { justify-content: flex-start; text-align: left; }
+      .pair-connector { flex-direction: row; padding: 0; }
+      .connector-line { width: 30px; }
+      .pair-detail-inner { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; }
+      .how-section { padding: 4rem 1.5rem 6rem; }
+      .steps { grid-template-columns: 1fr; gap: 2rem; }
+      .apply-section { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav scrolled" id="nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="index.html#community" class="nav-link">COMMUNITY</a>
+    </div>
+    <a href="index.html" class="nav-logo">
+      <span class="logo-text">CURSOR</span>
+      <span class="logo-sub">ZAMBIA</span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html#join" class="nav-link">JOIN US</a>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <p class="page-hero-label">04 / MENTORSHIP PROGRAM</p>
+    <h1 class="page-hero-title">Knowledge flows<br>both ways</h1>
+    <p class="page-hero-desc">Experienced developers paired with rising talent. Click any pair to see what they're working on together.</p>
+  </section>
+
+  <section class="network-section">
+    <div class="pairs-header">
+      <span class="pairs-header-line"></span>
+      <span class="pairs-header-text">ACTIVE MENTORSHIP PAIRS</span>
+    </div>
+
+    <div class="pairs-grid" id="pairsGrid"></div>
+  </section>
+
+  <section class="how-section">
+    <div class="how-header">
+      <p class="how-label">HOW IT WORKS</p>
+      <h2 class="how-title">Three simple steps</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">01</div>
+        <h3 class="step-title">Apply</h3>
+        <p class="step-desc">Tell us about your experience level, goals, and what you want to learn or teach. We match based on compatibility.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <h3 class="step-title">Connect</h3>
+        <p class="step-desc">Get paired with your mentor or mentee. Meet weekly for focused 1-on-1 sessions, code reviews, and pair programming.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">03</div>
+        <h3 class="step-title">Grow</h3>
+        <p class="step-desc">Build real projects, develop new skills, and contribute back to the community. Track progress over a 3-month cycle.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="apply-section">
+    <p class="apply-label">APPLICATIONS OPEN</p>
+    <h2 class="apply-title">Ready to connect?</h2>
+    <p class="apply-desc">Whether you want to guide someone or be guided, there's a place for you in our mentorship program.</p>
+    <div class="apply-actions">
+      <a href="#" class="btn-light">Apply as Mentor</a>
+      <a href="#" class="btn-ghost">Apply as Mentee</a>
+    </div>
+  </section>
+
+  <script>
+    const pairs = [
+      {
+        mentor: { initials: 'DZ', name: 'Dalitso Zulu', role: 'Systems Architect', color: '#5a4a3a' },
+        mentee: { initials: 'JM', name: 'Joseph Mutale', role: 'Junior Developer', color: '#7a8a6a' },
+        focus: 'System design, microservices architecture, and building production-ready Go services.',
+        mentorQuote: 'Joseph asks the right questions. He challenges my assumptions and that makes us both better.',
+        menteeQuote: 'Dalitso has completely changed how I think about code. It is not just about making it work, it is about making it right.',
+        tags: ['Go', 'System Design', 'Microservices', 'Code Review']
+      },
+      {
+        mentor: { initials: 'CN', name: 'Chisomo Njovu', role: 'Frontend Developer', color: '#3a4a5a' },
+        mentee: { initials: 'RM', name: 'Ruth Mbewe', role: 'Design Student', color: '#8a6a7a' },
+        focus: 'Bridging design and code. Building accessible component libraries and learning Vue.js fundamentals.',
+        mentorQuote: 'Ruth brings a design eye that I wish I had when I started. Teaching her code is teaching myself to think differently.',
+        menteeQuote: 'Chisomo showed me that design and code are not separate worlds. Cursor makes the transition so natural.',
+        tags: ['Vue.js', 'Accessibility', 'Design Systems', 'CSS']
+      },
+      {
+        mentor: { initials: 'MK', name: 'Mwila Kayombo', role: 'Full-Stack Engineer', color: '#4a5a3a' },
+        mentee: { initials: 'PK', name: 'Patrick Kabwe', role: 'Career Switcher', color: '#6a7a5a' },
+        focus: 'Full-stack web development with React and Node.js. Building portfolio projects using AI-assisted workflows.',
+        mentorQuote: 'Patrick came from accounting and now he is shipping features. Cursor is the great equalizer.',
+        menteeQuote: 'Six months ago I had never written code. Mwila and Cursor made me believe this was possible.',
+        tags: ['React', 'Node.js', 'TypeScript', 'Career Change']
+      },
+      {
+        mentor: { initials: 'KS', name: 'Kapembwa Simwanza', role: 'Data Engineer', color: '#5a3a4a' },
+        mentee: { initials: 'NG', name: 'Nchimunya Gondwe', role: 'CS Student', color: '#5a6a8a' },
+        focus: 'Data pipelines, Python best practices, and applying machine learning to Zambian agricultural datasets.',
+        mentorQuote: 'Nchimunya is going to surpass me soon. She has an intuition for data that cannot be taught.',
+        menteeQuote: 'Kapembwa does not just teach me code. He teaches me how to think about problems from the data up.',
+        tags: ['Python', 'Data Engineering', 'ML', 'Agriculture']
+      },
+      {
+        mentor: { initials: 'LB', name: 'Lombe Banda', role: 'Creative Technologist', color: '#4a3a5a' },
+        mentee: { initials: 'CM', name: 'Chanda Mwansa', role: 'Art Student', color: '#7a6a5a' },
+        focus: 'Creative coding with Three.js and p5.js. Exploring generative art inspired by Zambian visual culture.',
+        mentorQuote: 'Chanda sees patterns everywhere. Code is just another medium for her artistic expression.',
+        menteeQuote: 'I never thought coding could be this beautiful. Lombe opened a door I did not know existed.',
+        tags: ['Three.js', 'Creative Coding', 'Generative Art', 'p5.js']
+      }
+    ];
+
+    const grid = document.getElementById('pairsGrid');
+    let openIndex = -1;
+
+    pairs.forEach((pair, i) => {
+      const card = document.createElement('div');
+      card.className = 'pair-card';
+      card.innerHTML = `
+        <div class="pair-person">
+          <div class="pair-avatar" style="background:${pair.mentor.color}">${pair.mentor.initials}</div>
+          <div>
+            <div class="pair-name">${pair.mentor.name}</div>
+            <div class="pair-role">${pair.mentor.role}</div>
+          </div>
+        </div>
+        <div class="pair-connector">
+          <div class="connector-line"></div>
+          <span class="connector-label">MENTORING</span>
+        </div>
+        <div class="pair-person pair-person--right">
+          <div>
+            <div class="pair-name">${pair.mentee.name}</div>
+            <div class="pair-role">${pair.mentee.role}</div>
+          </div>
+          <div class="pair-avatar" style="background:${pair.mentee.color}">${pair.mentee.initials}</div>
+        </div>
+      `;
+
+      const detail = document.createElement('div');
+      detail.className = 'pair-detail';
+      detail.innerHTML = `
+        <div class="pair-detail-inner">
+          <div>
+            <p class="detail-col-label">MENTOR SAYS</p>
+            <p class="detail-quote">"${pair.mentorQuote}"</p>
+            <p class="detail-col-label" style="margin-top:1.5rem">MENTEE SAYS</p>
+            <p class="detail-quote">"${pair.menteeQuote}"</p>
+          </div>
+          <div>
+            <p class="detail-col-label">FOCUS AREAS</p>
+            <p class="detail-focus">${pair.focus}</p>
+            <div class="detail-tags">
+              ${pair.tags.map(t => `<span class="detail-tag">${t}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        if (openIndex === i) {
+          detail.classList.remove('open');
+          openIndex = -1;
+        } else {
+          document.querySelectorAll('.pair-detail.open').forEach(d => d.classList.remove('open'));
+          detail.classList.add('open');
+          openIndex = i;
+        }
+      });
+
+      grid.appendChild(card);
+      grid.appendChild(detail);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Source Projects / Cursor Zambia</title>
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .page-hero {
+      padding: 10rem 3rem 4rem;
+      text-align: center;
+    }
+    .page-hero-label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .page-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .page-hero-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* Projects Masonry */
+    .projects-section {
+      padding: 2rem 3rem 8rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .projects-filter {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.5rem;
+      border: 1px solid var(--color-border);
+      background: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--color-accent);
+      color: var(--color-white);
+      border-color: var(--color-accent);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .project-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .project-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    }
+
+    .project-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      color: white;
+    }
+
+    .project-name {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.82rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--color-text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      border-top: 1px solid var(--color-border);
+      padding-top: 1rem;
+    }
+
+    .project-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+    }
+
+    .project-stat svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .project-tech {
+      display: flex;
+      gap: 0.4rem;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    .tech-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+
+    /* Expanded project detail */
+    .project-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .project-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .project-overlay-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    .project-detail {
+      position: relative;
+      background: var(--color-white);
+      max-width: 650px;
+      width: 90%;
+      padding: 3.5rem;
+      transform: translateY(30px);
+      transition: transform 0.4s ease;
+    }
+
+    .project-overlay.active .project-detail {
+      transform: translateY(0);
+    }
+
+    .project-detail-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--color-text-muted);
+    }
+
+    .project-detail-close:hover {
+      color: var(--color-text);
+    }
+
+    .project-detail .project-icon {
+      width: 56px;
+      height: 56px;
+      font-size: 1.5rem;
+    }
+
+    .project-detail-name {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-detail-role {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .project-detail-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--color-text-light);
+      margin-bottom: 2rem;
+    }
+
+    .project-detail-features {
+      margin-bottom: 2rem;
+    }
+
+    .project-detail-features h4 {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .feature-list li {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .feature-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--color-border);
+    }
+
+    .project-detail-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .project-detail-actions .btn {
+      font-size: 0.65rem;
+      padding: 0.8rem 1.8rem;
+    }
+
+    /* Contributors */
+    .project-contributors {
+      display: flex;
+      gap: -8px;
+      margin-top: 1.5rem;
+      align-items: center;
+    }
+
+    .contrib-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55rem;
+      color: white;
+      border: 2px solid var(--color-white);
+      margin-left: -8px;
+    }
+
+    .contrib-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .contrib-count {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      margin-left: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 8rem 1.5rem 2rem; }
+      .projects-section { padding: 2rem 1.5rem 6rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card { padding: 2rem; }
+      .project-detail { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav scrolled" id="nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="index.html#community" class="nav-link">COMMUNITY</a>
+    </div>
+    <a href="index.html" class="nav-logo">
+      <span class="logo-text">CURSOR</span>
+      <span class="logo-sub">ZAMBIA</span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html#join" class="nav-link">JOIN US</a>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <p class="page-hero-label">01 / OPEN SOURCE</p>
+    <h1 class="page-hero-title">Built by the<br>community</h1>
+    <p class="page-hero-desc">Tools, extensions, and templates created by Cursor Zambia members. Open for everyone to use and contribute.</p>
+  </section>
+
+  <section class="projects-section">
+    <div class="projects-filter">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="extension">Extensions</button>
+      <button class="filter-btn" data-filter="tool">Tools</button>
+      <button class="filter-btn" data-filter="template">Templates</button>
+      <button class="filter-btn" data-filter="library">Libraries</button>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid"></div>
+  </section>
+
+  <!-- Detail Overlay -->
+  <div class="project-overlay" id="projectOverlay">
+    <div class="project-overlay-bg" id="projectOverlayBg"></div>
+    <div class="project-detail">
+      <button class="project-detail-close" id="projectClose">&times;</button>
+      <div class="project-icon" id="detailIcon"></div>
+      <h2 class="project-detail-name" id="detailName"></h2>
+      <p class="project-detail-role" id="detailCategory"></p>
+      <p class="project-detail-desc" id="detailDesc"></p>
+      <div class="project-detail-features">
+        <h4>KEY FEATURES</h4>
+        <ul class="feature-list" id="detailFeatures"></ul>
+      </div>
+      <div class="project-contributors" id="detailContributors"></div>
+      <div class="project-detail-actions">
+        <a href="#" class="btn btn-primary" id="detailGithub">View on GitHub</a>
+        <a href="#" class="btn btn-outline">Documentation</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const projects = [
+      {
+        name: 'Cursor Rules ZM',
+        category: 'extension',
+        icon: 'CR',
+        color: '#5a4a3a',
+        desc: 'A curated set of Cursor rules optimized for Zambian dev workflows, including local API integrations and common patterns.',
+        fullDesc: 'Cursor Rules ZM provides a comprehensive set of AI rules and context files tailored for developers working on Zambian tech projects. It includes templates for mobile money integrations, USSD development, and local government API patterns.',
+        features: ['Pre-built rules for MTN/Airtel Money APIs', 'USSD application scaffolding', 'Bemba/Nyanja localization helpers', 'Smart context for Zambian regulatory compliance'],
+        stars: 47, forks: 12, contributors: ['MK', 'BM', 'CN'],
+        techColors: ['#f7df1e', '#3178c6']
+      },
+      {
+        name: 'ZamPay SDK',
+        category: 'library',
+        icon: 'ZP',
+        color: '#3a4a5a',
+        desc: 'Unified payment SDK for Zambian mobile money providers. One API, all networks.',
+        fullDesc: 'ZamPay SDK abstracts the complexity of integrating with multiple Zambian mobile money providers into a single, elegant API. Built with TypeScript and thoroughly tested.',
+        features: ['MTN Mobile Money integration', 'Airtel Money support', 'Zamtel Kwacha payments', 'Webhook handling and transaction reconciliation'],
+        stars: 89, forks: 23, contributors: ['DZ', 'KS', 'MK', 'NM'],
+        techColors: ['#3178c6', '#68a063']
+      },
+      {
+        name: 'LusakaUI',
+        category: 'template',
+        icon: 'LU',
+        color: '#4a5a3a',
+        desc: 'A beautiful component library inspired by Zambian art and patterns. Accessible by default.',
+        fullDesc: 'LusakaUI is a React component library that draws inspiration from traditional Zambian textile patterns, copper art, and natural landscapes to create a distinctive yet modern design system.',
+        features: ['30+ accessible components', 'Tonga, Lozi, and Bemba pattern themes', 'Dark and light modes', 'Figma design kit included'],
+        stars: 134, forks: 31, contributors: ['CN', 'LB', 'TM'],
+        techColors: ['#61dafb', '#e34c26', '#563d7c']
+      },
+      {
+        name: 'AgriCursor',
+        category: 'tool',
+        icon: 'AC',
+        color: '#5a3a4a',
+        desc: 'AI-powered agricultural data analysis tool built with Cursor for Zambian farmers and agronomists.',
+        fullDesc: 'AgriCursor leverages AI to provide crop yield predictions, soil analysis recommendations, and market price forecasting specifically calibrated for Zambian agricultural zones.',
+        features: ['Satellite imagery analysis for crop health', 'Rainfall prediction models for Zambian regions', 'Market price alerts for major crops', 'SMS integration for offline farmers'],
+        stars: 56, forks: 8, contributors: ['KS', 'BM'],
+        techColors: ['#3572A5', '#f7df1e']
+      },
+      {
+        name: 'CursorSnippets',
+        category: 'extension',
+        icon: 'CS',
+        color: '#3a5a4a',
+        desc: 'A growing collection of Cursor-optimized code snippets for rapid development in popular frameworks.',
+        fullDesc: 'CursorSnippets provides intelligent, context-aware code snippets that integrate deeply with Cursor AI features. Each snippet is designed to be a starting point that Cursor can expand intelligently.',
+        features: ['200+ framework-specific snippets', 'AI-context annotations for better completions', 'Multi-cursor support', 'Custom snippet creator tool'],
+        stars: 72, forks: 18, contributors: ['MK', 'SM', 'TM'],
+        techColors: ['#3178c6', '#61dafb', '#68a063']
+      },
+      {
+        name: 'Moba Starter',
+        category: 'template',
+        icon: 'MS',
+        color: '#4a3a5a',
+        desc: 'Full-stack starter template for mobile-first Zambian web apps with offline support.',
+        fullDesc: 'Moba Starter is an opinionated full-stack template designed for the realities of Zambian internet connectivity. It features aggressive caching, offline-first architecture, and low-bandwidth optimizations.',
+        features: ['PWA with offline-first architecture', 'Low-bandwidth image optimization', 'USSD fallback interface', 'Pre-configured for Zambian hosting providers'],
+        stars: 63, forks: 15, contributors: ['TM', 'DZ', 'CN'],
+        techColors: ['#61dafb', '#68a063', '#e34c26']
+      }
+    ];
+
+    const grid = document.getElementById('projectsGrid');
+    const overlay = document.getElementById('projectOverlay');
+
+    function renderProjects(filter) {
+      const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter);
+      grid.innerHTML = '';
+
+      filtered.forEach((proj, i) => {
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        card.setAttribute('data-category', proj.category);
+        card.style.transitionDelay = (i * 0.08) + 's';
+        card.innerHTML = `
+          <div style="position:absolute;top:0;left:0;width:100%;height:3px;background:${proj.color};transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease" class="card-accent"></div>
+          <div class="project-icon" style="background:${proj.color}">${proj.icon}</div>
+          <h3 class="project-name">${proj.name}</h3>
+          <p class="project-desc">${proj.desc}</p>
+          <div class="project-meta">
+            <span class="project-stat">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg>
+              ${proj.stars}
+            </span>
+            <span class="project-stat">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-.878a2.25 2.25 0 111.5 0v.878a2.25 2.25 0 01-2.25 2.25h-1.5v2.128a2.251 2.251 0 11-1.5 0V8.5h-1.5A2.25 2.25 0 013.5 6.25v-.878a2.25 2.25 0 111.5 0zM5 3.25a.75.75 0 10-1.5 0 .75.75 0 001.5 0zm6.75.75a.75.75 0 100-1.5.75.75 0 000 1.5zM8 12.75a.75.75 0 100-1.5.75.75 0 000 1.5z"/></svg>
+              ${proj.forks}
+            </span>
+            <div class="project-tech">
+              ${proj.techColors.map(c => `<span class="tech-dot" style="background:${c}"></span>`).join('')}
+            </div>
+          </div>
+        `;
+
+        card.addEventListener('mouseenter', () => {
+          card.querySelector('.card-accent').style.transform = 'scaleX(1)';
+        });
+        card.addEventListener('mouseleave', () => {
+          card.querySelector('.card-accent').style.transform = 'scaleX(0)';
+        });
+        card.addEventListener('click', () => openProject(proj));
+
+        grid.appendChild(card);
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => card.classList.add('visible'));
+        });
+      });
+    }
+
+    function openProject(proj) {
+      document.getElementById('detailIcon').style.background = proj.color;
+      document.getElementById('detailIcon').textContent = proj.icon;
+      document.getElementById('detailName').textContent = proj.name;
+      document.getElementById('detailCategory').textContent = proj.category.toUpperCase();
+      document.getElementById('detailDesc').textContent = proj.fullDesc;
+      document.getElementById('detailFeatures').innerHTML = proj.features.map(f => `<li>${f}</li>`).join('');
+      document.getElementById('detailContributors').innerHTML =
+        proj.contributors.map(c => `<span class="contrib-avatar" style="background:${projects.find(p=>p.contributors.includes(c))?.color || '#666'}">${c}</span>`).join('') +
+        `<span class="contrib-count">${proj.contributors.length} contributors</span>`;
+
+      overlay.classList.add('active');
+    }
+
+    // Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        renderProjects(this.getAttribute('data-filter'));
+      });
+    });
+
+    document.getElementById('projectClose').addEventListener('click', () => overlay.classList.remove('active'));
+    document.getElementById('projectOverlayBg').addEventListener('click', () => overlay.classList.remove('active'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.classList.remove('active'); });
+
+    renderProjects('all');
+  </script>
+</body>
+</html>

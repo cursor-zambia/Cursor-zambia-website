@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Spotlights / Cursor Zambia</title>
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .page-hero {
+      padding: 10rem 3rem 4rem;
+      text-align: center;
+    }
+    .page-hero-label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .page-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .page-hero-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* Mind Map */
+    .mindmap {
+      position: relative;
+      width: 100%;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .mindmap-container {
+      position: relative;
+      width: 700px;
+      height: 700px;
+    }
+
+    .dev-node {
+      position: absolute;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 3px solid var(--color-bg);
+    }
+
+    .dev-node .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-weight: 400;
+      color: rgba(255,255,255,0.9);
+      font-size: 1.5rem;
+      transition: font-size 0.5s ease;
+    }
+
+    .dev-node .name-tag {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--color-text-light);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .mindmap-container:hover .dev-node {
+      opacity: 0.4;
+      transform: scale(0.85);
+      filter: blur(1px);
+    }
+
+    .mindmap-container:hover .dev-node:hover {
+      opacity: 1;
+      transform: scale(1.6);
+      filter: blur(0);
+      z-index: 50;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+      border-color: var(--color-white);
+    }
+
+    .mindmap-container:hover .dev-node:hover .name-tag {
+      opacity: 1;
+    }
+
+    .mindmap-container:hover .dev-node:hover .avatar {
+      font-size: 1.8rem;
+    }
+
+    /* Connection lines */
+    .mindmap-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .mindmap-lines line {
+      stroke: var(--color-border);
+      stroke-width: 1;
+      opacity: 0.3;
+    }
+
+    /* Bio Overlay */
+    .bio-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .bio-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .bio-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .bio-card {
+      position: relative;
+      background: var(--color-white);
+      max-width: 600px;
+      width: 90%;
+      padding: 3.5rem;
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .bio-overlay.active .bio-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .bio-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 30px;
+      height: 30px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+
+    .bio-close:hover {
+      color: var(--color-text);
+    }
+
+    .bio-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .bio-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      color: rgba(255,255,255,0.9);
+      flex-shrink: 0;
+    }
+
+    .bio-name {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .bio-role {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .bio-text {
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--color-text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .bio-work-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .bio-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .bio-tag {
+      font-size: 0.7rem;
+      font-weight: 400;
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-light);
+    }
+
+    .bio-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .bio-link {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 2px;
+      transition: border-color 0.3s ease;
+    }
+
+    .bio-link:hover {
+      border-color: var(--color-text);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .mindmap-container {
+        width: 350px;
+        height: 350px;
+      }
+      .page-hero {
+        padding: 8rem 1.5rem 2rem;
+      }
+      .bio-card {
+        padding: 2rem;
+      }
+      .bio-name {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="index.html#community" class="nav-link">COMMUNITY</a>
+    </div>
+    <a href="index.html" class="nav-logo">
+      <span class="logo-text">CURSOR</span>
+      <span class="logo-sub">ZAMBIA</span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html#join" class="nav-link">JOIN US</a>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <p class="page-hero-label">02 / DEVELOPER SPOTLIGHTS</p>
+    <h1 class="page-hero-title">The people<br>behind the code</h1>
+    <p class="page-hero-desc">Hover to discover. Click to learn more about the developers shaping Zambia's AI-first future.</p>
+  </section>
+
+  <section class="mindmap">
+    <div class="mindmap-container" id="mindmapContainer">
+      <svg class="mindmap-lines" id="mindmapLines"></svg>
+    </div>
+  </section>
+
+  <!-- Bio Overlay -->
+  <div class="bio-overlay" id="bioOverlay">
+    <div class="bio-backdrop" id="bioBackdrop"></div>
+    <div class="bio-card">
+      <button class="bio-close" id="bioClose">&times;</button>
+      <div class="bio-header">
+        <div class="bio-avatar" id="bioAvatar"></div>
+        <div>
+          <h2 class="bio-name" id="bioName"></h2>
+          <p class="bio-role" id="bioRole"></p>
+        </div>
+      </div>
+      <p class="bio-text" id="bioText"></p>
+      <p class="bio-work-label">SPECIALIZATIONS</p>
+      <div class="bio-tags" id="bioTags"></div>
+      <div class="bio-links" id="bioLinks"></div>
+    </div>
+  </div>
+
+  <script>
+    const developers = [
+      { initials: 'MK', name: 'Mwila Kayombo', role: 'Full-Stack Engineer', color: '#5a4a3a', bio: 'Mwila has been building web applications for over 6 years. An early Cursor adopter, he now leads workshops teaching AI-assisted development to junior developers across Lusaka.', tags: ['React', 'Node.js', 'AI Agents', 'TypeScript'], github: '#', twitter: '#' },
+      { initials: 'CN', name: 'Chisomo Njovu', role: 'Frontend Developer', color: '#3a4a5a', bio: 'Chisomo specializes in crafting beautiful, accessible user interfaces. She is passionate about design systems and uses Cursor to accelerate her component-driven workflow.', tags: ['Vue.js', 'Tailwind', 'Design Systems', 'A11y'], github: '#', twitter: '#' },
+      { initials: 'BM', name: 'Bwalya Mulenga', role: 'Backend & DevOps', color: '#4a5a3a', bio: 'Bwalya architects scalable backend systems and CI/CD pipelines. He contributes to open-source Cursor extensions and mentors newcomers in cloud infrastructure.', tags: ['Python', 'Docker', 'AWS', 'Cursor Extensions'], github: '#', twitter: '#' },
+      { initials: 'TM', name: 'Thandiwe Musonda', role: 'Mobile Developer', color: '#5a3a4a', bio: 'Thandiwe builds cross-platform mobile apps that serve communities across Zambia. She leverages Cursor for rapid prototyping and AI-powered code generation.', tags: ['React Native', 'Flutter', 'Firebase', 'UI/UX'], github: '#', twitter: '#' },
+      { initials: 'KS', name: 'Kapembwa Simwanza', role: 'Data Engineer', color: '#3a5a4a', bio: 'Kapembwa transforms raw data into actionable insights. He uses Cursor to write ETL pipelines and explore machine learning models for Zambian agritech startups.', tags: ['Python', 'SQL', 'Machine Learning', 'dbt'], github: '#', twitter: '#' },
+      { initials: 'LB', name: 'Lombe Banda', role: 'Creative Technologist', color: '#4a3a5a', bio: 'Lombe sits at the intersection of art and code. She creates interactive web experiences, generative art, and teaches creative coding at community events.', tags: ['Three.js', 'GLSL', 'p5.js', 'Creative Coding'], github: '#', twitter: '#' },
+      { initials: 'DZ', name: 'Dalitso Zulu', role: 'Systems Architect', color: '#5a4a3a', bio: 'Dalitso designs distributed systems for fintech products. With 10+ years of experience, he provides architectural guidance to community projects and startups.', tags: ['Go', 'Microservices', 'gRPC', 'System Design'], github: '#', twitter: '#' },
+      { initials: 'NM', name: 'Natasha Mwape', role: 'QA & Automation', color: '#3a4a4a', bio: 'Natasha ensures quality at every level. She builds automated testing frameworks with Cursor and advocates for test-driven development in the community.', tags: ['Playwright', 'Cypress', 'Jest', 'CI/CD'], github: '#', twitter: '#' },
+      { initials: 'SM', name: 'Sampa Mumba', role: 'Blockchain Developer', color: '#4a4a3a', bio: 'Sampa is pioneering blockchain solutions for supply chain transparency in Zambia. He uses Cursor to rapidly iterate on smart contracts and dApps.', tags: ['Solidity', 'Rust', 'Web3', 'Smart Contracts'], github: '#', twitter: '#' },
+    ];
+
+    const positions = [
+      { x: 50, y: 50, size: 110 },
+      { x: 22, y: 25, size: 90 },
+      { x: 78, y: 20, size: 95 },
+      { x: 15, y: 60, size: 85 },
+      { x: 85, y: 55, size: 88 },
+      { x: 35, y: 82, size: 80 },
+      { x: 68, y: 80, size: 82 },
+      { x: 8, y: 88, size: 75 },
+      { x: 92, y: 88, size: 78 },
+    ];
+
+    const container = document.getElementById('mindmapContainer');
+    const linesEl = document.getElementById('mindmapLines');
+    const overlay = document.getElementById('bioOverlay');
+
+    // Create nodes
+    developers.forEach((dev, i) => {
+      const pos = positions[i];
+      const node = document.createElement('div');
+      node.className = 'dev-node';
+      node.style.width = pos.size + 'px';
+      node.style.height = pos.size + 'px';
+      node.style.left = `calc(${pos.x}% - ${pos.size / 2}px)`;
+      node.style.top = `calc(${pos.y}% - ${pos.size / 2}px)`;
+
+      node.innerHTML = `
+        <div class="avatar" style="background:${dev.color}">${dev.initials}</div>
+        <span class="name-tag">${dev.name.split(' ')[0]}</span>
+      `;
+
+      node.addEventListener('click', () => openBio(dev));
+      container.appendChild(node);
+    });
+
+    // Draw connection lines
+    const centerIdx = 0;
+    const cx = positions[centerIdx].x;
+    const cy = positions[centerIdx].y;
+    positions.forEach((pos, i) => {
+      if (i === centerIdx) return;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', cx + '%');
+      line.setAttribute('y1', cy + '%');
+      line.setAttribute('x2', pos.x + '%');
+      line.setAttribute('y2', pos.y + '%');
+      linesEl.appendChild(line);
+    });
+
+    function openBio(dev) {
+      document.getElementById('bioAvatar').style.background = dev.color;
+      document.getElementById('bioAvatar').textContent = dev.initials;
+      document.getElementById('bioName').textContent = dev.name;
+      document.getElementById('bioRole').textContent = dev.role;
+      document.getElementById('bioText').textContent = dev.bio;
+
+      const tagsEl = document.getElementById('bioTags');
+      tagsEl.innerHTML = dev.tags.map(t => `<span class="bio-tag">${t}</span>`).join('');
+
+      const linksEl = document.getElementById('bioLinks');
+      linksEl.innerHTML = `
+        <a href="${dev.github}" class="bio-link">GitHub</a>
+        <a href="${dev.twitter}" class="bio-link">X / Twitter</a>
+      `;
+
+      overlay.classList.add('active');
+    }
+
+    document.getElementById('bioClose').addEventListener('click', () => overlay.classList.remove('active'));
+    document.getElementById('bioBackdrop').addEventListener('click', () => overlay.classList.remove('active'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.classList.remove('active'); });
+
+    document.getElementById('nav').classList.add('scrolled');
+  </script>
+</body>
+</html>
