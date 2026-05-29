@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursor Hackathon Zambia / Cursor Zambia</title>
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .event-hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.15) 100%);
+    }
+    .event-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 4rem 3rem;
+      color: white;
+      max-width: 760px;
+    }
+    .event-hero-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 1rem;
+    }
+    .event-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.12;
+      margin-bottom: 1.5rem;
+    }
+    .event-hero-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .event-hero-meta span {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      opacity: 0.75;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .event-hero-meta svg { width: 13px; height: 13px; }
+
+    .article-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    .article-kicker {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .article-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 2.5rem;
+    }
+    .article-lead {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.8;
+      color: var(--color-text-light);
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .article-body p {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.95;
+      color: var(--color-text-light);
+      margin-bottom: 1.75rem;
+    }
+    .article-body h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin: 2.5rem 0 1rem;
+      color: var(--color-text);
+    }
+    .article-photo {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+      overflow: hidden;
+    }
+    .article-photo img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+    .article-photo:hover img { transform: scale(1.02); }
+    .article-photo-caption {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      padding: 0.75rem 0 0;
+    }
+
+    /* Tracks */
+    .tracks-band {
+      background: var(--color-white);
+      padding: 4rem 3rem;
+    }
+    .tracks-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .tracks-inner h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .track-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .track-pill {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.7rem 1.5rem;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-light);
+    }
+
+    /* Winners */
+    .winners {
+      padding: 5rem 3rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .winners-label {
+      text-align: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .winners-title {
+      text-align: center;
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      margin-bottom: 3rem;
+    }
+    .winners-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--color-border);
+    }
+    .winner {
+      background: var(--color-white);
+      padding: 2rem;
+      text-align: center;
+    }
+    .winner-rank {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--color-border);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .winner-name {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+    .winner-track {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+    .winner-desc {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--color-text-light);
+      line-height: 1.7;
+    }
+
+    .next-event {
+      background: var(--color-bg-dark);
+      color: white;
+      padding: 6rem 3rem;
+      text-align: center;
+    }
+    .next-event-label { font-size: 0.65rem; letter-spacing: 0.2em; opacity: 0.4; margin-bottom: 1.5rem; }
+    .next-event-title { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; margin-bottom: 2.5rem; }
+    .next-event-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-white { display: inline-flex; padding: 1rem 2.5rem; background: white; color: #1a1a1a; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: opacity 0.3s ease; }
+    .btn-white:hover { opacity: 0.85; }
+    .btn-border-white { display: inline-flex; padding: 1rem 2.5rem; border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: border-color 0.3s ease; }
+    .btn-border-white:hover { border-color: white; }
+
+    @media (max-width: 768px) {
+      .event-hero-content { padding: 3rem 1.5rem; }
+      .article-wrap { padding: 3rem 1.5rem; }
+      .article-photo { padding: 0 1rem; }
+      .tracks-band { padding: 3rem 1.5rem; }
+      .winners { padding: 3rem 1.5rem; }
+      .winners-grid { grid-template-columns: 1fr; }
+      .next-event { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav scrolled" id="nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="index.html#events" class="nav-link">EVENTS</a>
+    </div>
+    <a href="index.html" class="nav-logo">
+      <span class="logo-text">CURSOR</span>
+      <span class="logo-sub">ZAMBIA</span>
+    </a>
+    <div class="nav-right">
+      <a href="https://chat.whatsapp.com/I1UkLFpUMJj791DA07cmBk" target="_blank" rel="noopener noreferrer" class="nav-link">JOIN US</a>
+    </div>
+  </nav>
+
+  <header class="event-hero">
+    <div class="hero-bg" style="background-image:url('assets/hackathon-group.png')"></div>
+    <div class="event-hero-content">
+      <p class="event-hero-label">Cursor Hackathon Zambia / Recap</p>
+      <h1 class="event-hero-title">AI builders come<br>together in Lusaka</h1>
+      <div class="event-hero-meta">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          May 25, 2026
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          The Library Shhh, Lusaka
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          11 Projects Built
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <article>
+    <div class="article-wrap">
+      <p class="article-kicker">EVENT RECAP / LUSAKA</p>
+      <h2 class="article-headline">Cursor Hackathon Zambia Brings AI Builders Together in Lusaka</h2>
+      <p class="article-lead">
+        The recent Cursor Hackathon Zambia organized by Cursor Zambia marked another important step in growing Zambia's local AI builder ecosystem.
+      </p>
+      <div class="article-body">
+        <p>
+          Held at The Library Shhh in Lusaka, the event brought together developers, students, creatives, designers, and curious builders for a full day focused on collaboration, rapid prototyping, and experimenting with modern AI development workflows using Cursor.
+        </p>
+        <p>
+          The hackathon was designed to be beginner friendly while still giving experienced builders space to create ambitious projects. Participants formed teams, explored ideas together, and built projects directly during the event using Cursor AI-assisted development, tools, and workflows.
+        </p>
+
+        <h3>Building Real Solutions With AI</h3>
+        <p>
+          One of the biggest highlights of the event was the diversity of ideas created throughout the day. A total of 11 projects were successfully built during the hackathon across multiple tracks focused on solving real-world African and Zambian challenges.
+        </p>
+        <p>
+          Rather than focusing only on theory, the hackathon encouraged participants to ship working concepts, prototypes, and applications that could eventually grow into real startups, tools, and platforms.
+        </p>
+      </div>
+    </div>
+
+    <div class="article-photo">
+      <img src="assets/hackathon-group.png" alt="Cursor Hackathon Zambia participants in Lusaka">
+      <p class="article-photo-caption">Builders, students, and creatives at the first Cursor Zambia Hackathon.</p>
+    </div>
+
+    <div class="tracks-band">
+      <div class="tracks-inner">
+        <h3>Innovation Tracks</h3>
+        <div class="track-pills">
+          <span class="track-pill">Health</span>
+          <span class="track-pill">Agriculture</span>
+          <span class="track-pill">Education</span>
+          <span class="track-pill">Fintech</span>
+          <span class="track-pill">Open Track</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <section class="winners">
+    <p class="winners-label">RESULTS</p>
+    <h2 class="winners-title">Top 3 Hackathon Winners</h2>
+    <div class="article-photo" style="margin-top:0;margin-bottom:3rem;max-width:900px;">
+      <img src="assets/hackathon-winners.png" alt="Cursor Hackathon Zambia Top 3 Winners" style="aspect-ratio:4/3;">
+    </div>
+    <div class="winners-grid">
+      <div class="winner">
+        <div class="winner-rank">01</div>
+        <h3 class="winner-name">Kite</h3>
+        <p class="winner-track">Fintech Track</p>
+        <p class="winner-desc">Explored ways digital tools and AI could improve financial accessibility and user experiences for local users.</p>
+      </div>
+      <div class="winner">
+        <div class="winner-rank">02</div>
+        <h3 class="winner-name">Carry Me Lusaka</h3>
+        <p class="winner-track">Mobility</p>
+        <p class="winner-desc">Focused on transportation and mobility solutions within Lusaka, making movement and transport coordination easier and more accessible.</p>
+      </div>
+      <div class="winner">
+        <div class="winner-rank">03</div>
+        <h3 class="winner-name">AgroShield AI</h3>
+        <p class="winner-track">Agriculture / Smart Crop Insurance</p>
+        <p class="winner-desc">Stood out for its agriculture-focused approach, exploring how AI can support farmers with smarter insights and protection systems.</p>
+      </div>
+    </div>
+  </section>
+
+  <article>
+    <div class="article-wrap" style="padding-top:0;">
+      <div class="article-body">
+        <p>
+          Each winning team received prizes from Cursor for winning the hackathon and for their innovation, demonstrating the growing level of talent and creativity emerging from Zambia's AI and developer community.
+        </p>
+
+        <h3>Growing Zambia's AI Builder Ecosystem</h3>
+        <p>
+          Beyond the projects themselves, the hackathon represented something bigger: creating spaces where Zambians can actively participate in building the future of AI instead of only consuming technology built elsewhere.
+        </p>
+        <p>
+          The event emphasized collaboration, accessibility, experimentation, and learning. Beginners were able to work alongside experienced builders, while non-technical participants also contributed through ideas, design thinking, research, and creative direction.
+        </p>
+        <p>
+          The success of the hackathon also highlighted how AI-powered development tools like Cursor are lowering barriers to entry and allowing more Africans to rapidly prototype and build real-world applications. Through initiatives like Cursor Zambia, Zambia's local AI ecosystem continues to grow, creating new opportunities for builders, innovators, and communities across the country.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <section class="next-event">
+    <p class="next-event-label">WHAT'S NEXT</p>
+    <h2 class="next-event-title">Be part of the next build.</h2>
+    <div class="next-event-actions">
+      <a href="https://chat.whatsapp.com/I1UkLFpUMJj791DA07cmBk" target="_blank" rel="noopener noreferrer" class="btn-white">Join the Community</a>
+      <a href="index.html#events" class="btn-border-white">View All Events</a>
+    </div>
+  </section>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+  </script>
+</body>
+</html>

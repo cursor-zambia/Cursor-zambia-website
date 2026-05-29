@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Open Source Projects / Cursor Zambia</title>
+  <title>Community Projects / Cursor Zambia</title>
   <link rel="icon" href="assets/logo.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -364,14 +364,14 @@
       <span class="logo-sub">ZAMBIA</span>
     </a>
     <div class="nav-right">
-      <a href="index.html#join" class="nav-link">JOIN US</a>
+      <a href="https://chat.whatsapp.com/I1UkLFpUMJj791DA07cmBk" target="_blank" rel="noopener noreferrer" class="nav-link">JOIN US</a>
     </div>
   </nav>
 
   <section class="page-hero">
-    <p class="page-hero-label">01 / OPEN SOURCE</p>
+    <p class="page-hero-label">01 / COMMUNITY PROJECTS</p>
     <h1 class="page-hero-title">Built by the<br>community</h1>
-    <p class="page-hero-desc">Tools, extensions, and templates created by Cursor Zambia members. Open for everyone to use and contribute.</p>
+    <p class="page-hero-desc">Tools, platforms, and templates from Cursor Zambia members and friends of the community. Explore, use, and contribute.</p>
   </section>
 
   <section class="projects-section">
@@ -381,6 +381,7 @@
       <button class="filter-btn" data-filter="tool">Tools</button>
       <button class="filter-btn" data-filter="template">Templates</button>
       <button class="filter-btn" data-filter="library">Libraries</button>
+      <button class="filter-btn" data-filter="platform">Platforms</button>
     </div>
 
     <div class="projects-grid" id="projectsGrid"></div>
@@ -402,13 +403,41 @@
       <div class="project-contributors" id="detailContributors"></div>
       <div class="project-detail-actions">
         <a href="#" class="btn btn-primary" id="detailGithub">View on GitHub</a>
-        <a href="#" class="btn btn-outline">Documentation</a>
+        <a href="#" class="btn btn-outline" id="detailDoc">Documentation</a>
       </div>
     </div>
   </div>
 
   <script>
     const projects = [
+      {
+        name: 'Latch',
+        category: 'platform',
+        icon: 'L',
+        color: '#1a1a1a',
+        desc: 'Live rooms for workshops and meetups: share resources, polls, quizzes, and Q&A without making your audience sign up.',
+        fullDesc: 'Latch is a live room for workshops, classes, and meetups. Guests join with a link, QR, or short code in the browser, no app required. Hosts get walls, files, polls, quizzes, and organized tabs for a calm session flow.',
+        features: ['Join via link, QR, or six-character code', 'Wall and files for decks and handouts', 'Live polls, quizzes, and moderated Q&A', 'Host dashboard to create and manage rooms'],
+        stars: 28, forks: 6, contributors: ['CZ'],
+        techColors: ['#6366f1', '#22c55e'],
+        liveUrl: 'https://latch-five.vercel.app/',
+        ctaLabel: 'Open Latch',
+        externalOnly: true
+      },
+      {
+        name: 'Sovereign OS',
+        category: 'platform',
+        icon: 'S',
+        color: '#0f172a',
+        desc: 'Autonomous agent infrastructure: encrypted memory backups, revival flows, and self-funding on-chain operations.',
+        fullDesc: 'Sovereign OS unifies persistence, encrypted state on decentralised storage, and agent wallets so AI agents can protect and restore their own state. Built for builders exploring resilient, autonomous agents.',
+        features: ['Agent state encryption and backup', 'Creator-triggered revival flows', 'USDC-backed operations on Base L2', 'Tax and ledger tooling for agent finances'],
+        stars: 41, forks: 9, contributors: ['CZ'],
+        techColors: ['#3b82f6', '#a855f7'],
+        liveUrl: 'https://sovereign-os-snowy.vercel.app/',
+        ctaLabel: 'Open Sovereign OS',
+        externalOnly: true
+      },
       {
         name: 'Cursor Rules ZM',
         category: 'extension',
@@ -535,6 +564,26 @@
       document.getElementById('detailContributors').innerHTML =
         proj.contributors.map(c => `<span class="contrib-avatar" style="background:${projects.find(p=>p.contributors.includes(c))?.color || '#666'}">${c}</span>`).join('') +
         `<span class="contrib-count">${proj.contributors.length} contributors</span>`;
+
+      const cta = document.getElementById('detailGithub');
+      const docBtn = document.getElementById('detailDoc');
+      if (proj.liveUrl) {
+        cta.href = proj.liveUrl;
+        cta.textContent = proj.ctaLabel || 'Visit site';
+        cta.target = '_blank';
+        cta.rel = 'noopener noreferrer';
+      } else {
+        cta.href = '#';
+        cta.textContent = 'View on GitHub';
+        cta.removeAttribute('target');
+        cta.removeAttribute('rel');
+      }
+      if (proj.externalOnly) {
+        docBtn.style.display = 'none';
+      } else {
+        docBtn.style.display = 'inline-flex';
+        docBtn.href = '#';
+      }
 
       overlay.classList.add('active');
     }

@@ -327,14 +327,14 @@
       <span class="logo-sub">ZAMBIA</span>
     </a>
     <div class="nav-right">
-      <a href="index.html#join" class="nav-link">JOIN US</a>
+      <a href="https://chat.whatsapp.com/I1UkLFpUMJj791DA07cmBk" target="_blank" rel="noopener noreferrer" class="nav-link">JOIN US</a>
     </div>
   </nav>
 
   <section class="page-hero">
     <p class="page-hero-label">03 / LEARNING RESOURCES</p>
-    <h1 class="page-hero-title">The community<br>library</h1>
-    <p class="page-hero-desc">Curated guides, tutorials, and references organized on our virtual bookshelf. Hover to preview, click to dive in.</p>
+    <h1 class="page-hero-title">Cursor learning hub<br>for builders</h1>
+    <p class="page-hero-desc">Official docs first, community playbooks second. These resources are focused on real Cursor workflows and are updated to match current product behavior.</p>
   </section>
 
   <section class="library" id="library"></section>
@@ -351,36 +351,36 @@
     <div class="panel-topics" id="panelTopics"></div>
     <p class="panel-section-label">DIFFICULTY</p>
     <div class="panel-difficulty" id="panelDiff"></div>
-    <a href="#" class="panel-cta">Start Learning</a>
+    <a href="#" class="panel-cta" id="panelCta" target="_blank" rel="noopener noreferrer">Open Resource</a>
   </div>
 
   <script>
     const shelves = [
       {
-        label: 'GETTING STARTED',
+        label: 'OFFICIAL CURSOR',
         books: [
-          { title: 'Cursor 101', author: 'Cursor Zambia', color: '#5a4a3a', width: 45, height: 220, type: 'Guide', desc: 'The definitive beginner guide to Cursor IDE. Learn the interface, AI features, and your first AI-assisted coding session.', topics: ['Setup', 'Interface', 'First Project', 'AI Chat'], difficulty: 1 },
-          { title: 'AI Prompting for Devs', author: 'Mwila K.', color: '#3a4a5a', width: 38, height: 200, type: 'Tutorial', desc: 'Master the art of writing effective prompts that get you better code completions, refactors, and explanations from Cursor AI.', topics: ['Prompting', 'Context', 'Best Practices'], difficulty: 1 },
-          { title: 'Setup Your Workspace', author: 'Bwalya M.', color: '#6a5a4a', width: 32, height: 190, type: 'Guide', desc: 'Configure Cursor for maximum productivity. Extensions, settings, keybindings, and AI rules that top developers use.', topics: ['Configuration', 'Extensions', 'Keybindings'], difficulty: 1 },
-          { title: 'Git + Cursor', author: 'Dalitso Z.', color: '#4a5a3a', width: 40, height: 210, type: 'Tutorial', desc: 'Leverage Cursor AI for better commits, branch management, conflict resolution, and code reviews.', topics: ['Git', 'Version Control', 'Code Review'], difficulty: 2 },
-          { title: 'Your First Extension', author: 'Chisomo N.', color: '#5a3a4a', width: 36, height: 195, type: 'Workshop', desc: 'Build and publish your first Cursor extension in under 2 hours. Step-by-step from scaffolding to marketplace.', topics: ['Extensions', 'TypeScript', 'Publishing'], difficulty: 2 },
+          { title: 'Quickstart', author: 'Cursor Docs', color: '#5a4a3a', width: 45, height: 220, type: 'Official Guide', desc: 'Official quickstart walkthrough for setting up Cursor and shipping your first AI-assisted edits.', topics: ['Install', 'First prompts', 'Chat + inline edit', 'Core workflow'], difficulty: 1, url: 'https://docs.cursor.com/en/get-started/quickstart' },
+          { title: 'First Project', author: 'Cursor Help', color: '#3a4a5a', width: 38, height: 200, type: 'Official Tutorial', desc: 'Hands-on onboarding for your first real project in Cursor, from setup to implementation loop.', topics: ['Project setup', 'Context', 'Edits', 'Review'], difficulty: 1, url: 'https://cursor.com/help/getting-started/first-project' },
+          { title: 'Keyboard Shortcuts', author: 'Cursor Help', color: '#6a5a4a', width: 32, height: 190, type: 'Official Reference', desc: 'Official keyboard reference for speed in chat, inline edits, and command workflows.', topics: ['Shortcuts', 'Navigation', 'Productivity'], difficulty: 1, url: 'https://cursor.com/help/customization/keyboard-shortcuts' },
+          { title: 'Cursor Changelog', author: 'Cursor', color: '#4a5a3a', width: 40, height: 210, type: 'Official Updates', desc: 'Track new features and behavior changes before teaching or mentoring others.', topics: ['Releases', 'New features', 'Breaking changes'], difficulty: 1, url: 'https://www.cursor.com/changelog' },
+          { title: 'Release Forum', author: 'Cursor Community', color: '#5a3a4a', width: 36, height: 195, type: 'Discussion', desc: 'Release discussion threads and announcement context from the Cursor community forum.', topics: ['Announcements', 'Community tips', 'Rollout notes'], difficulty: 2, url: 'https://forum.cursor.com' },
         ]
       },
       {
-        label: 'INTERMEDIATE',
+        label: 'PROMPTING + WORKFLOWS',
         books: [
-          { title: 'Rules & Context Files', author: 'Mwila K.', color: '#3a5a4a', width: 42, height: 230, type: 'Deep Dive', desc: 'Write powerful .cursorrules and context files that transform how AI understands your codebase, architecture, and conventions.', topics: ['Rules', 'Context', 'AI Training', 'Patterns'], difficulty: 3 },
-          { title: 'Full-Stack with AI', author: 'Thandiwe M.', color: '#4a3a5a', width: 50, height: 240, type: 'Course', desc: 'Build a complete full-stack application using Cursor as your AI pair programmer. React frontend, Node backend, database design.', topics: ['React', 'Node.js', 'Database', 'Deployment'], difficulty: 3 },
-          { title: 'Testing Patterns', author: 'Natasha M.', color: '#5a4a3a', width: 35, height: 205, type: 'Guide', desc: 'Use Cursor to write comprehensive test suites. AI-generated unit tests, integration tests, and E2E testing strategies.', topics: ['Jest', 'Playwright', 'TDD', 'Coverage'], difficulty: 3 },
-          { title: 'Refactoring Mastery', author: 'Dalitso Z.', color: '#3a4a5a', width: 44, height: 225, type: 'Tutorial', desc: 'Advanced refactoring techniques powered by AI. Safely modernize legacy code, improve performance, and reduce technical debt.', topics: ['Refactoring', 'Performance', 'Clean Code'], difficulty: 3 },
+          { title: 'Prompt Engineering Session', author: 'Created by Cursor Zambia', color: '#3a5a4a', width: 42, height: 230, type: 'Community Workshop', desc: 'Prompt Engineering with Neuro-Linguistic patterns for machines: structure prompts by intent, framing, constraints, and feedback loops.', topics: ['NLP framing', 'Intent modeling', 'Constraint prompts', 'Iterative refinement'], difficulty: 3, url: 'https://chat.whatsapp.com/I1UkLFpUMJj791DA07cmBk' },
+          { title: 'Rules and Context', author: 'Created by Cursor', color: '#4a3a5a', width: 50, height: 240, type: 'Official Docs', desc: 'How to build stable context pipelines so Cursor understands architecture, coding conventions, and quality boundaries.', topics: ['Rule hierarchy', 'Project context', 'Guardrails', 'Reusable prompts'], difficulty: 3, url: 'https://docs.cursor.com/en/get-started/quickstart' },
+          { title: 'AI PR Review Playbook', author: 'Created by Cursor', color: '#5a4a3a', width: 35, height: 205, type: 'Official', desc: 'Practical framework for reviewing AI-generated diffs with risk checks, tests, and rollback confidence.', topics: ['Diff checks', 'Tests', 'Risk scoring', 'Merge readiness'], difficulty: 3, url: 'https://forum.cursor.com' },
+          { title: 'Full Stack Agent Loop', author: 'Created by Cursor', color: '#3a4a5a', width: 44, height: 225, type: 'Official Docs', desc: 'End-to-end flow: plan, implement, test, and document using Cursor agents across frontend and backend tasks.', topics: ['Agent decomposition', 'Cross-file edits', 'Validation', 'Documentation'], difficulty: 4, url: 'https://docs.cursor.com/en/get-started/quickstart' },
         ]
       },
       {
-        label: 'ADVANCED',
+        label: 'ADVANCED BUILDERS',
         books: [
-          { title: 'AI Agent Workflows', author: 'Kapembwa S.', color: '#4a5a3a', width: 48, height: 245, type: 'Research', desc: 'Explore multi-step AI agent patterns in Cursor. Autonomous coding, task decomposition, and complex project generation.', topics: ['AI Agents', 'Automation', 'Multi-step', 'MCP'], difficulty: 5 },
-          { title: 'MCP Servers', author: 'Sampa M.', color: '#5a3a4a', width: 40, height: 220, type: 'Deep Dive', desc: 'Build and integrate Model Context Protocol servers to extend Cursor capabilities with custom tools and data sources.', topics: ['MCP', 'Servers', 'API Design', 'Integration'], difficulty: 5 },
-          { title: 'Enterprise Cursor', author: 'Bwalya M.', color: '#3a5a4a', width: 46, height: 235, type: 'Guide', desc: 'Deploying Cursor in team environments. Shared rules, security policies, SOC2 compliance, and organizational AI governance.', topics: ['Teams', 'Security', 'Compliance', 'Governance'], difficulty: 4 },
+          { title: 'Agent Patterns', author: 'Created by Cursor', color: '#4a5a3a', width: 48, height: 245, type: 'Official', desc: 'How to design robust multi-step agent tasks and evaluate generated changes over longer execution chains.', topics: ['Long tasks', 'Checkpoints', 'Parallel attempts', 'Evaluation'], difficulty: 5, url: 'https://www.cursor.com/changelog' },
+          { title: 'MCP Integration', author: 'Created by Cursor', color: '#5a3a4a', width: 40, height: 220, type: 'Official', desc: 'Use MCP integrations to bring external tools and data into your coding workflow safely and predictably.', topics: ['MCP basics', 'Tool schemas', 'Safety', 'Automation'], difficulty: 5, url: 'https://forum.cursor.com' },
+          { title: 'Team-Scale Cursor', author: 'Created by Cursor', color: '#3a5a4a', width: 46, height: 235, type: 'Official Docs', desc: 'Operational playbook for teams: standards, reviews, mentoring loops, and consistent AI output quality.', topics: ['Team standards', 'Review policy', 'Onboarding', 'Quality gates'], difficulty: 4, url: 'https://www.cursor.com/changelog' },
         ]
       }
     ];
@@ -425,12 +425,15 @@
         const data = JSON.parse(book.getAttribute('data-book'));
         document.getElementById('panelColor').style.background = data.color;
         document.getElementById('panelTitle').textContent = data.title;
-        document.getElementById('panelMeta').textContent = `${data.type} / By ${data.author}`;
+        document.getElementById('panelMeta').textContent = `${data.type} / ${data.author}`;
         document.getElementById('panelDesc').textContent = data.desc;
         document.getElementById('panelTopics').innerHTML = data.topics.map(t => `<span class="panel-topic">${t}</span>`).join('');
         document.getElementById('panelDiff').innerHTML = Array.from({length: 5}, (_, i) =>
           `<span class="diff-bar ${i < data.difficulty ? 'filled' : ''}"></span>`
         ).join('');
+        const panelCta = document.getElementById('panelCta');
+        panelCta.href = data.url || '#';
+        panelCta.textContent = data.url ? 'Open Resource' : 'Start Learning';
 
         panel.classList.add('open');
         backdrop.classList.add('open');

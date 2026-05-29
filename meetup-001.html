@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursor Meetup Zambia 001 / Cursor Zambia</title>
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+    /* Hero */
+    .event-hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .event-hero-slideshow {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .hero-slide.active { opacity: 1; }
+
+    .hero-slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%);
+    }
+
+    .event-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 4rem 3rem;
+      color: white;
+      max-width: 700px;
+    }
+
+    .event-hero-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+
+    .event-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+
+    .event-hero-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .event-hero-meta span {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .event-hero-meta svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    /* Slide indicators */
+    .slide-indicators {
+      position: absolute;
+      bottom: 2rem;
+      right: 3rem;
+      z-index: 3;
+      display: flex;
+      gap: 6px;
+    }
+
+    .slide-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .slide-dot.active {
+      background: white;
+      width: 22px;
+      border-radius: 3px;
+    }
+
+    /* Article layout */
+    .article-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .article-kicker {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .article-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 2.5rem;
+    }
+
+    .article-lead {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.8;
+      color: var(--color-text-light);
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .article-body p {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.95;
+      color: var(--color-text-light);
+      margin-bottom: 1.75rem;
+    }
+
+    /* Inline photo */
+    .article-photo {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+      overflow: hidden;
+    }
+
+    .article-photo img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .article-photo:hover img { transform: scale(1.02); }
+
+    .article-photo-caption {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      padding: 0.75rem 0 0;
+    }
+
+    /* Side pull-quote */
+    .article-pull {
+      border-left: 2px solid var(--color-text);
+      padding: 0.5rem 0 0.5rem 2rem;
+      margin: 2.5rem 0;
+    }
+
+    .article-pull p {
+      font-family: var(--font-serif);
+      font-size: 1.4rem !important;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--color-text) !important;
+      line-height: 1.5 !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* Two-up photo pair */
+    .photo-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .photo-pair img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .photo-pair img:hover { transform: scale(1.03); }
+
+    /* Gallery grid */
+    .gallery-section {
+      background: var(--color-bg-dark);
+      padding: 5rem 3rem;
+    }
+
+    .gallery-section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .photo-grid-item {
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .photo-grid-item img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease, filter 0.5s ease;
+      filter: brightness(0.9);
+    }
+
+    .photo-grid-item:hover img {
+      transform: scale(1.06);
+      filter: brightness(1);
+    }
+
+    .photo-grid-item--wide {
+      grid-column: span 2;
+    }
+
+    .photo-grid-item--wide img { aspect-ratio: 2/1; }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 88vh;
+      object-fit: contain;
+      transform: scale(0.95);
+      transition: transform 0.4s ease;
+    }
+
+    .lightbox.active img { transform: scale(1); }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .lightbox-close:hover { color: white; }
+
+    .lightbox-prev,
+    .lightbox-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.3s ease, background 0.3s ease;
+      font-size: 1.2rem;
+    }
+
+    .lightbox-prev { left: 1.5rem; }
+    .lightbox-next { right: 1.5rem; }
+
+    .lightbox-prev:hover,
+    .lightbox-next:hover {
+      border-color: white;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .lightbox-counter {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* Thank You section */
+    .thankyou {
+      background: var(--color-white);
+      padding: 6rem 3rem;
+    }
+
+    .thankyou-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .thankyou-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .thankyou-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 2rem;
+    }
+
+    .thankyou-body p {
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.95;
+      color: var(--color-text-light);
+      margin-bottom: 1.25rem;
+    }
+
+    .thankyou-sig {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+    }
+
+    /* Next event CTA */
+    .next-event {
+      background: var(--color-bg-dark);
+      color: white;
+      padding: 6rem 3rem;
+      text-align: center;
+    }
+
+    .next-event-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      opacity: 0.4;
+      margin-bottom: 1.5rem;
+    }
+
+    .next-event-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+
+    .next-event-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-white {
+      display: inline-flex;
+      padding: 1rem 2.5rem;
+      background: white;
+      color: #1a1a1a;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn-white:hover { opacity: 0.85; }
+
+    .btn-border-white {
+      display: inline-flex;
+      padding: 1rem 2.5rem;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .btn-border-white:hover { border-color: white; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .event-hero-content { padding: 3rem 1.5rem; }
+      .article-wrap { padding: 3rem 1.5rem; }
+      .article-photo { padding: 0 1rem; }
+      .photo-pair { padding: 0 1rem; gap: 4px; }
+      .gallery-section { padding: 3rem 1rem; }
+      .photo-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
+      .photo-grid-item--wide { grid-column: span 2; }
+      .photo-grid-item--wide img { aspect-ratio: 16/9; }
+      .thankyou { padding: 4rem 1.5rem; }
+      .next-event { padding: 4rem 1.5rem; }
+      .slide-indicators { right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav scrolled" id="nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="index.html#events" class="nav-link">EVENTS</a>
+    </div>
+    <a href="index.html" class="nav-logo">
+      <span class="logo-text">CURSOR</span>
+      <span class="logo-sub">ZAMBIA</span>
+    </a>
+    <div class="nav-right">
+      <a href="https://chat.whatsapp.com/I1UkLFpUMJj791DA07cmBk" target="_blank" rel="noopener noreferrer" class="nav-link">JOIN US</a>
+    </div>
+  </nav>
+
+  <!-- Hero Slideshow -->
+  <header class="event-hero">
+    <div class="event-hero-slideshow" id="heroSlideshow">
+      <div class="hero-slide active" style="background-image:url('assets/meetup.png')"></div>
+      <div class="hero-slide" style="background-image:url('assets/meetup-hands-on.png')"></div>
+      <div class="hero-slide" style="background-image:url('assets/gallery-04.png')"></div>
+      <div class="hero-slide" style="background-image:url('assets/gallery-06.png')"></div>
+    </div>
+    <div class="event-hero-content">
+      <p class="event-hero-label">Cursor Meetup Zambia 001 &nbsp;/&nbsp; Recap</p>
+      <h1 class="event-hero-title">The First Cursor<br>Meetup in Zambia</h1>
+      <div class="event-hero-meta">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          April 2026
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Lusaka, Zambia
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Community Meetup
+        </span>
+      </div>
+    </div>
+    <div class="slide-indicators" id="slideIndicators"></div>
+  </header>
+
+  <!-- Article -->
+  <article>
+    <div class="article-wrap">
+      <p class="article-kicker">EVENT RECAP / LUSAKA</p>
+      <h2 class="article-headline">Cursor Activation Meetup, Zambia</h2>
+      <p class="article-lead">
+        Join us for the Cursor Activation Meetup in Zambia. A space to discover, build, and connect with developers, founders, students, and curious minds from across Lusaka.
+      </p>
+
+      <div class="article-body">
+        <p>
+          We started with a simple introduction to Cursor, breaking down what it is and how it works. No jargon, no assumptions. Just a clear-eyed look at what AI-native development actually means and why it matters for developers building in Zambia today.
+        </p>
+      </div>
+    </div>
+
+    <!-- Full-bleed photo 1 -->
+    <div class="article-photo">
+      <img src="assets/meetup-hands-on.png" alt="Developers collaborating at Cursor Meetup Zambia">
+      <p class="article-photo-caption">Developers deep in a hands-on session at the meetup.</p>
+    </div>
+
+    <div class="article-wrap">
+      <div class="article-body">
+        <p>
+          From there we moved into a live demo, watching real projects being built and debugged right in front of the room. You could feel the energy shift when people saw, for the first time, just how fast ideas can become working code.
+        </p>
+
+        <div class="article-pull">
+          <p>"It's also a space to meet developers, founders, students, and curious minds. To share ideas, have real conversations, and start building something together."</p>
+        </div>
+
+        <p>
+          After the demo, attendees got a chance to try it themselves in a hands-on session, exploring what Cursor can do and how AI-native development actually feels when you're in the seat. Come with your laptops and curiosity, ready to connect.
+        </p>
+      </div>
+    </div>
+
+    <!-- Photo pair -->
+    <div class="photo-pair">
+      <img src="assets/gallery-02.png" alt="Cursor Meetup Zambia">
+      <img src="assets/gallery-03.png" alt="Cursor Meetup Zambia">
+    </div>
+
+    <div class="article-wrap">
+      <div class="article-body">
+        <p>
+          The room was a mix of seasoned engineers, career switchers, students, and founders, all drawn by the same question: what does building with AI actually look like in practice? By the end of the session, most of them had an answer.
+        </p>
+      </div>
+    </div>
+
+    <!-- Full-bleed photo 2 -->
+    <div class="article-photo">
+      <img src="assets/gallery-04.png" alt="Attendee at Cursor Meetup Zambia">
+      <p class="article-photo-caption">An attendee working through the hands-on session.</p>
+    </div>
+
+    <div class="article-wrap">
+      <div class="article-body">
+        <p>
+          What made the evening special wasn't just the technology. It was the people. Conversations kept going long after the formal session ended. New collaborations started. Ideas were exchanged. The Cursor Zambia community had its first real gathering, and it was just the beginning.
+        </p>
+      </div>
+    </div>
+
+    <!-- Full-bleed photo 3 -->
+    <div class="article-photo">
+      <img src="assets/gallery-05.png" alt="Community at Cursor Meetup Zambia">
+      <p class="article-photo-caption">The Cursor community gathering in Lusaka.</p>
+    </div>
+
+    <div class="article-wrap">
+      <div class="article-body">
+        <p>
+          The energy was undeniable. From first-timers picking up Cursor for the very first time, to experienced developers rethinking their entire workflow, everyone left with something new. That's what a community is for.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Full Gallery Grid -->
+  <section class="gallery-section">
+    <p class="gallery-section-label">MOMENTS FROM THE EVENT</p>
+    <div class="photo-grid" id="photoGrid">
+      <div class="photo-grid-item photo-grid-item--wide" data-idx="0">
+        <img src="assets/gallery-06.png" alt="Cursor Meetup Zambia">
+      </div>
+      <div class="photo-grid-item" data-idx="1">
+        <img src="assets/gallery-07.png" alt="Cursor Meetup Zambia">
+      </div>
+      <div class="photo-grid-item" data-idx="2">
+        <img src="assets/gallery-08.png" alt="Cursor Meetup Zambia">
+      </div>
+      <div class="photo-grid-item" data-idx="3">
+        <img src="assets/meetup-hands-on.png" alt="Cursor Meetup Zambia">
+      </div>
+      <div class="photo-grid-item photo-grid-item--wide" data-idx="4">
+        <img src="assets/meetup.png" alt="Cursor Meetup Zambia group photo">
+      </div>
+      <div class="photo-grid-item" data-idx="5">
+        <img src="assets/gallery-02.png" alt="Cursor Meetup Zambia">
+      </div>
+      <div class="photo-grid-item" data-idx="6">
+        <img src="assets/gallery-03.png" alt="Cursor Meetup Zambia">
+      </div>
+      <div class="photo-grid-item" data-idx="7">
+        <img src="assets/gallery-04.png" alt="Cursor Meetup Zambia">
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <button class="lightbox-prev" id="lightboxPrev">&#8592;</button>
+    <img src="" alt="" id="lightboxImg">
+    <button class="lightbox-next" id="lightboxNext">&#8594;</button>
+    <span class="lightbox-counter" id="lightboxCounter"></span>
+  </div>
+
+  <!-- Thank You -->
+  <section class="thankyou">
+    <div class="thankyou-inner">
+      <p class="thankyou-label">FROM BASE ZAMBIA</p>
+      <h2 class="thankyou-title">Thank You for Joining Us at Cursor Meetup Zambia</h2>
+      <div class="thankyou-body">
+        <p>Hi everyone,</p>
+        <p>
+          A heartfelt thank you to all of you who joined us at the Cursor Meetup Zambia. Your energy, ideas, and enthusiasm made the session truly special. It was amazing to connect with so many builders, creatives, and developers in Lusaka, and we hope you found the experience as inspiring and engaging as we did.
+        </p>
+        <p>
+          We appreciate your time and participation, and we look forward to seeing you at our future events as we continue building, learning, and growing together.
+        </p>
+        <p>Stay connected and keep creating.</p>
+      </div>
+      <p class="thankyou-sig">Base Zambia Team</p>
+    </div>
+  </section>
+
+  <!-- Next Event CTA -->
+  <section class="next-event">
+    <p class="next-event-label">WHAT'S NEXT</p>
+    <h2 class="next-event-title">The next session is coming.<br>Don't miss it.</h2>
+    <div class="next-event-actions">
+      <a href="https://chat.whatsapp.com/I1UkLFpUMJj791DA07cmBk" target="_blank" rel="noopener noreferrer" class="btn-white">Join the Community</a>
+      <a href="index.html#events" class="btn-border-white">View All Events</a>
+    </div>
+  </section>
+
+  <script>
+    // Hero auto-slideshow
+    const slides = document.querySelectorAll('.hero-slide');
+    const indicatorsEl = document.getElementById('slideIndicators');
+    let currentSlide = 0;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => goToSlide(i));
+      indicatorsEl.appendChild(dot);
+    });
+
+    function goToSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      document.querySelectorAll('.slide-dot')[currentSlide].classList.remove('active');
+      currentSlide = (n + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      document.querySelectorAll('.slide-dot')[currentSlide].classList.add('active');
+    }
+
+    setInterval(() => goToSlide(currentSlide + 1), 4000);
+
+    // Gallery lightbox
+    const galleryImages = [
+      'assets/gallery-06.png',
+      'assets/gallery-07.png',
+      'assets/gallery-08.png',
+      'assets/meetup-hands-on.png',
+      'assets/meetup.png',
+      'assets/gallery-02.png',
+      'assets/gallery-03.png',
+      'assets/gallery-04.png',
+    ];
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+    let lbIndex = 0;
+
+    function openLightbox(idx) {
+      lbIndex = idx;
+      lightboxImg.src = galleryImages[idx];
+      lightboxCounter.textContent = (idx + 1) + ' / ' + galleryImages.length;
+      lightbox.classList.add('active');
+    }
+
+    document.querySelectorAll('.photo-grid-item').forEach(item => {
+      item.addEventListener('click', () => openLightbox(parseInt(item.getAttribute('data-idx'))));
+    });
+
+    document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('active'));
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('active'); });
+
+    document.getElementById('lightboxPrev').addEventListener('click', e => {
+      e.stopPropagation();
+      lbIndex = (lbIndex - 1 + galleryImages.length) % galleryImages.length;
+      lightboxImg.src = galleryImages[lbIndex];
+      lightboxCounter.textContent = (lbIndex + 1) + ' / ' + galleryImages.length;
+    });
+
+    document.getElementById('lightboxNext').addEventListener('click', e => {
+      e.stopPropagation();
+      lbIndex = (lbIndex + 1) % galleryImages.length;
+      lightboxImg.src = galleryImages[lbIndex];
+      lightboxCounter.textContent = (lbIndex + 1) + ' / ' + galleryImages.length;
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') lightbox.classList.remove('active');
+      if (e.key === 'ArrowLeft') document.getElementById('lightboxPrev').click();
+      if (e.key === 'ArrowRight') document.getElementById('lightboxNext').click();
+    });
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+  </script>
+</body>
+</html>

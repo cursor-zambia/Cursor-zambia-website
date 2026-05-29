@@ -55,11 +55,13 @@
     const duration = 1500;
     const start = performance.now();
 
+    const suffix = el.getAttribute('data-suffix') !== null ? el.getAttribute('data-suffix') : '+';
+
     function tick(now) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.round(eased * target) + '+';
+      el.textContent = Math.round(eased * target) + suffix;
 
       if (progress < 1) {
         requestAnimationFrame(tick);
