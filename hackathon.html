@@ -222,6 +222,112 @@
       line-height: 1.7;
     }
 
+    /* Photo pair */
+    .photo-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+    .photo-pair img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      cursor: zoom-in;
+      transition: transform 0.5s ease, filter 0.5s ease;
+    }
+    .photo-pair img:hover { transform: scale(1.02); filter: brightness(1.05); }
+
+    /* Gallery */
+    .gallery-section {
+      padding: 5rem 3rem;
+      background: var(--color-white);
+    }
+    .gallery-section-inner { max-width: 1100px; margin: 0 auto; }
+    .gallery-section-label {
+      text-align: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .gallery-section-title {
+      text-align: center;
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      margin-bottom: 3rem;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .photo-grid img {
+      width: 100%;
+      aspect-ratio: 3/2;
+      object-fit: cover;
+      cursor: zoom-in;
+      transition: transform 0.5s ease, filter 0.5s ease;
+    }
+    .photo-grid img:hover { transform: scale(1.03); filter: brightness(1.05); }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(10,10,10,0.94);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .lightbox.active { opacity: 1; pointer-events: all; }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      transform: scale(0.96);
+      transition: transform 0.35s ease;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+    .lightbox.active img { transform: scale(1); }
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+    .lightbox-close:hover { opacity: 1; }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-prev { left: 1.5rem; }
+    .lightbox-next { right: 1.5rem; }
+
     .next-event {
       background: var(--color-bg-dark);
       color: white;
@@ -244,6 +350,12 @@
       .winners { padding: 3rem 1.5rem; }
       .winners-grid { grid-template-columns: 1fr; }
       .next-event { padding: 4rem 1.5rem; }
+      .photo-pair { grid-template-columns: 1fr; padding: 0 1rem; }
+      .gallery-section { padding: 3rem 1.5rem; }
+      .photo-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    }
+    @media (max-width: 480px) {
+      .photo-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -311,8 +423,13 @@
     </div>
 
     <div class="article-photo">
-      <img src="assets/hackathon-group.png" alt="Cursor Hackathon Zambia participants in Lusaka">
+      <img src="assets/hackathon-group.png" alt="Cursor Hackathon Zambia participants in Lusaka" data-lightbox>
       <p class="article-photo-caption">Builders, students, and creatives at the first Cursor Zambia Hackathon.</p>
+    </div>
+
+    <div class="photo-pair">
+      <img src="assets/hack-01.png" alt="Team collaborating during the hackathon" data-lightbox>
+      <img src="assets/hack-02.png" alt="Participants discussing project ideas" data-lightbox>
     </div>
 
     <div class="tracks-band">
@@ -378,6 +495,28 @@
     </div>
   </article>
 
+  <section class="gallery-section">
+    <div class="gallery-section-inner">
+      <p class="gallery-section-label">THE DAY IN PHOTOS</p>
+      <h2 class="gallery-section-title">Moments from the hackathon</h2>
+      <div class="photo-grid">
+        <img src="assets/hack-03.png" alt="Builder focused on their project" data-lightbox>
+        <img src="assets/hack-04.png" alt="Team session at the hackathon" data-lightbox>
+        <img src="assets/hack-05.png" alt="The hackathon venue in Lusaka" data-lightbox>
+        <img src="assets/hack-06.png" alt="Participants building together" data-lightbox>
+        <img src="assets/hack-01.png" alt="Late-night coding session" data-lightbox>
+        <img src="assets/hack-02.png" alt="Team brainstorming ideas" data-lightbox>
+      </div>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous">&#8249;</button>
+    <img src="" alt="" id="lightboxImg">
+    <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next">&#8250;</button>
+  </div>
+
   <section class="next-event">
     <p class="next-event-label">WHAT'S NEXT</p>
     <h2 class="next-event-title">Be part of the next build.</h2>
@@ -391,6 +530,34 @@
     window.addEventListener('scroll', () => {
       document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
     }, { passive: true });
+
+    (function () {
+      const imgs = Array.from(document.querySelectorAll('[data-lightbox]'));
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      let index = 0;
+
+      function show(i) {
+        index = (i + imgs.length) % imgs.length;
+        lightboxImg.src = imgs[index].src;
+        lightboxImg.alt = imgs[index].alt;
+      }
+      function open(i) { show(i); lightbox.classList.add('active'); }
+      function close() { lightbox.classList.remove('active'); }
+
+      imgs.forEach((img, i) => img.addEventListener('click', () => open(i)));
+      document.getElementById('lightboxClose').addEventListener('click', close);
+      document.getElementById('lightboxPrev').addEventListener('click', () => show(index - 1));
+      document.getElementById('lightboxNext').addEventListener('click', () => show(index + 1));
+      lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') close();
+        if (e.key === 'ArrowLeft') show(index - 1);
+        if (e.key === 'ArrowRight') show(index + 1);
+      });
+    })();
   </script>
+  <script src="main.js"></script>
 </body>
 </html>

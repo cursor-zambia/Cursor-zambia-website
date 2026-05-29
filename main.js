@@ -134,6 +134,45 @@
     updateActiveTab();
   }
 
+  // Mobile navigation drawer (built from existing nav links)
+  function initMobileNav() {
+    if (!nav || document.querySelector('.nav-toggle')) return;
+
+    const links = [];
+    nav.querySelectorAll('.nav-left a, .nav-right a').forEach((a) => {
+      links.push({ href: a.getAttribute('href'), text: a.textContent.trim(), target: a.getAttribute('target'), rel: a.getAttribute('rel') });
+    });
+    if (!links.length) return;
+
+    const toggle = document.createElement('button');
+    toggle.className = 'nav-toggle';
+    toggle.setAttribute('aria-label', 'Toggle menu');
+    toggle.innerHTML = '<span></span><span></span><span></span>';
+    nav.appendChild(toggle);
+
+    const drawer = document.createElement('div');
+    drawer.className = 'mobile-drawer';
+    drawer.innerHTML = links
+      .map((l) => `<a href="${l.href}"${l.target ? ` target="${l.target}"` : ''}${l.rel ? ` rel="${l.rel}"` : ''}>${l.text}</a>`)
+      .join('');
+    document.body.appendChild(drawer);
+
+    function closeDrawer() {
+      toggle.classList.remove('open');
+      drawer.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    toggle.addEventListener('click', () => {
+      const isOpen = toggle.classList.toggle('open');
+      drawer.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeDrawer));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+  }
+
   // Parallax-lite on hero
   function initHeroParallax() {
     const hero = document.querySelector('.hero-inner');
@@ -161,6 +200,7 @@
     initCounters();
     initSmoothScroll();
     initTabs();
+    initMobileNav();
     initHeroParallax();
   }
 

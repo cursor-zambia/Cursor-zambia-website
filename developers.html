@@ -11,64 +11,115 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     .page-hero {
-      padding: 10rem 3rem 4rem;
+      padding: 11rem 3rem 2rem;
       text-align: center;
+      position: relative;
     }
     .page-hero-label {
       font-family: var(--font-sans);
       font-size: 0.65rem;
       font-weight: 500;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.22em;
       color: var(--color-text-muted);
       margin-bottom: 1.5rem;
     }
     .page-hero-title {
       font-family: var(--font-serif);
-      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
       font-weight: 300;
-      line-height: 1.15;
-      margin-bottom: 1rem;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
     }
     .page-hero-desc {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-weight: 300;
       color: var(--color-text-light);
-      max-width: 500px;
+      max-width: 520px;
       margin: 0 auto;
-      line-height: 1.8;
+      line-height: 1.85;
     }
 
-    /* Mind Map */
-    .mindmap {
+    /* ===== Constellation (desktop) ===== */
+    .constellation {
       position: relative;
-      width: 100%;
-      min-height: 80vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
-      overflow: hidden;
+      padding: 2rem 1rem 5rem;
+    }
+    .constellation-stage {
+      position: relative;
+      width: 680px;
+      height: 680px;
+      max-width: 92vw;
+    }
+    .constellation-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .constellation-lines line {
+      stroke: var(--color-border);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      opacity: 0.5;
+      stroke-dasharray: 4 5;
+      animation: dashDrift 22s linear infinite;
+    }
+    @keyframes dashDrift {
+      to { stroke-dashoffset: -200; }
     }
 
-    .mindmap-container {
-      position: relative;
-      width: 700px;
-      height: 700px;
+    .hub {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      z-index: 5;
+      border: 4px solid var(--color-bg);
     }
+    .hub::after {
+      content: '';
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      border: 1px solid var(--color-border);
+      animation: pulseRing 3.5s ease-out infinite;
+    }
+    @keyframes pulseRing {
+      0% { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(1.35); opacity: 0; }
+    }
+    .hub img { width: 78px; height: 78px; object-fit: contain; }
 
     .dev-node {
       position: absolute;
       border-radius: 50%;
       cursor: pointer;
-      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 3px solid var(--color-bg);
+      overflow: visible;
+      border: 4px solid var(--color-bg);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+      transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.45s ease, filter 0.45s ease, box-shadow 0.45s ease;
+      animation: floatNode 7s ease-in-out infinite;
     }
-
+    @keyframes floatNode {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -10px; }
+    }
     .dev-node .avatar {
       width: 100%;
       height: 100%;
@@ -77,67 +128,93 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-serif);
-      font-weight: 400;
-      color: rgba(255,255,255,0.9);
-      font-size: 1.5rem;
-      transition: font-size 0.5s ease;
+      font-weight: 500;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: 0.02em;
     }
-
     .dev-node .name-tag {
       position: absolute;
-      bottom: -30px;
+      bottom: -34px;
       left: 50%;
       transform: translateX(-50%);
       white-space: nowrap;
+      text-align: center;
       font-family: var(--font-sans);
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 500;
-      letter-spacing: 0.1em;
-      color: var(--color-text-light);
+      letter-spacing: 0.08em;
+      color: var(--color-text);
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-
-    .mindmap-container:hover .dev-node {
-      opacity: 0.4;
-      transform: scale(0.85);
-      filter: blur(1px);
+    .dev-node .name-tag small {
+      display: block;
+      font-weight: 400;
+      color: var(--color-text-muted);
+      letter-spacing: 0.05em;
+      margin-top: 2px;
     }
 
-    .mindmap-container:hover .dev-node:hover {
+    .constellation-stage:hover .dev-node {
+      opacity: 0.32;
+      transform: scale(0.9);
+      filter: saturate(0.6);
+      animation-play-state: paused;
+    }
+    .constellation-stage:hover .dev-node:hover {
       opacity: 1;
-      transform: scale(1.6);
-      filter: blur(0);
-      z-index: 50;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+      transform: scale(1.35);
+      filter: saturate(1);
+      z-index: 20;
+      box-shadow: 0 22px 60px rgba(0,0,0,0.28);
       border-color: var(--color-white);
     }
+    .constellation-stage:hover .dev-node:hover .name-tag { opacity: 1; }
 
-    .mindmap-container:hover .dev-node:hover .name-tag {
-      opacity: 1;
+    .hint {
+      text-align: center;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-top: -2rem;
+      padding-bottom: 4rem;
     }
 
-    .mindmap-container:hover .dev-node:hover .avatar {
-      font-size: 1.8rem;
+    /* ===== Card grid (mobile/tablet) ===== */
+    .dev-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1px;
+      background: var(--color-border);
+      border: 1px solid var(--color-border);
+      max-width: 720px;
+      margin: 1rem auto 5rem;
     }
-
-    /* Connection lines */
-    .mindmap-lines {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
+    .dev-grid-card {
+      background: var(--color-white);
+      padding: 1.75rem 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
-
-    .mindmap-lines line {
-      stroke: var(--color-border);
-      stroke-width: 1;
-      opacity: 0.3;
+    .dev-grid-card:hover { background: var(--color-bg); }
+    .dev-grid-card .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      color: rgba(255,255,255,0.95);
     }
+    .dev-grid-card .gc-name { font-family: var(--font-serif); font-size: 1.1rem; }
+    .dev-grid-card .gc-role { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-top: 0.3rem; }
 
-    /* Bio Overlay */
+    /* ===== Bio modal ===== */
     .bio-overlay {
       position: fixed;
       inset: 0;
@@ -148,160 +225,90 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s ease;
+      padding: 1.5rem;
     }
-
-    .bio-overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
+    .bio-overlay.active { opacity: 1; pointer-events: all; }
     .bio-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(26, 26, 26, 0.6);
+      background: rgba(26,26,26,0.6);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
-
     .bio-card {
       position: relative;
       background: var(--color-white);
-      max-width: 600px;
-      width: 90%;
-      padding: 3.5rem;
-      transform: translateY(30px) scale(0.95);
-      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      max-width: 560px;
+      width: 100%;
+      padding: 3rem;
+      transform: translateY(30px) scale(0.96);
+      transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+      box-shadow: 0 40px 90px rgba(0,0,0,0.3);
+      max-height: 88vh;
+      overflow-y: auto;
     }
-
-    .bio-overlay.active .bio-card {
-      transform: translateY(0) scale(1);
-    }
-
+    .bio-overlay.active .bio-card { transform: translateY(0) scale(1); }
     .bio-close {
       position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      width: 30px;
-      height: 30px;
-      background: none;
-      border: none;
-      cursor: pointer;
+      top: 1.25rem;
+      right: 1.25rem;
+      width: 32px; height: 32px;
+      background: none; border: none; cursor: pointer;
       color: var(--color-text-muted);
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       transition: color 0.3s ease;
     }
-
-    .bio-close:hover {
-      color: var(--color-text);
-    }
-
-    .bio-header {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
+    .bio-close:hover { color: var(--color-text); }
+    .bio-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.75rem; }
     .bio-avatar {
-      width: 80px;
-      height: 80px;
+      width: 84px; height: 84px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-family: var(--font-serif);
       font-size: 2rem;
-      color: rgba(255,255,255,0.9);
+      color: rgba(255,255,255,0.95);
       flex-shrink: 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
+    .bio-name { font-family: var(--font-serif); font-size: 1.9rem; font-weight: 400; line-height: 1.15; }
+    .bio-role { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-text-muted); margin-top: 0.35rem; }
+    .bio-location { font-size: 0.72rem; color: var(--color-text-light); margin-top: 0.4rem; display: flex; align-items: center; gap: 0.35rem; }
+    .bio-location svg { width: 12px; height: 12px; }
 
-    .bio-name {
-      font-family: var(--font-serif);
-      font-size: 1.8rem;
-      font-weight: 400;
-      line-height: 1.2;
-    }
-
-    .bio-role {
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-      margin-top: 0.25rem;
-    }
-
-    .bio-text {
-      font-size: 0.9rem;
-      font-weight: 300;
-      line-height: 1.9;
-      color: var(--color-text-light);
-      margin-bottom: 1.5rem;
-    }
-
-    .bio-work-label {
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      color: var(--color-text-muted);
-      margin-bottom: 0.75rem;
-    }
-
-    .bio-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .bio-tag {
-      font-size: 0.7rem;
-      font-weight: 400;
-      padding: 0.4rem 1rem;
+    .bio-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--color-border);
       border: 1px solid var(--color-border);
-      color: var(--color-text-light);
+      margin-bottom: 1.75rem;
     }
+    .bio-stat { background: var(--color-white); padding: 1rem 0.5rem; text-align: center; }
+    .bio-stat-num { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 400; line-height: 1; }
+    .bio-stat-label { font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-top: 0.4rem; }
 
-    .bio-links {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
+    .bio-text { font-size: 0.9rem; font-weight: 300; line-height: 1.9; color: var(--color-text-light); margin-bottom: 1.75rem; }
+    .bio-work-label { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.2em; color: var(--color-text-muted); margin-bottom: 0.75rem; }
+    .bio-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .bio-tag { font-size: 0.68rem; padding: 0.4rem 1rem; border: 1px solid var(--color-border); color: var(--color-text-light); }
+    .bio-links { display: flex; gap: 1.25rem; margin-top: 1.75rem; }
+    .bio-link { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.1em; color: var(--color-text); border-bottom: 1px solid var(--color-border); padding-bottom: 2px; transition: border-color 0.3s ease; }
+    .bio-link:hover { border-color: var(--color-text); }
 
-    .bio-link {
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      color: var(--color-text);
-      border-bottom: 1px solid var(--color-border);
-      padding-bottom: 2px;
-      transition: border-color 0.3s ease;
-    }
-
-    .bio-link:hover {
-      border-color: var(--color-text);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .mindmap-container {
-        width: 350px;
-        height: 350px;
-      }
-      .page-hero {
-        padding: 8rem 1.5rem 2rem;
-      }
-      .bio-card {
-        padding: 2rem;
-      }
-      .bio-name {
-        font-size: 1.4rem;
-      }
+    @media (max-width: 760px) {
+      .constellation, .hint { display: none; }
+      .dev-grid { display: grid; }
+      .page-hero { padding: 8rem 1.5rem 1rem; }
+      .bio-card { padding: 2rem; }
+      .bio-name { font-size: 1.5rem; }
+      .bio-header { gap: 1rem; }
+      .bio-avatar { width: 68px; height: 68px; font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
 
-  <nav class="nav" id="nav">
+  <nav class="nav scrolled" id="nav">
     <div class="nav-left">
       <a href="index.html" class="nav-link">HOME</a>
       <a href="index.html#community" class="nav-link">COMMUNITY</a>
@@ -318,26 +325,41 @@
   <section class="page-hero">
     <p class="page-hero-label">02 / DEVELOPER SPOTLIGHTS</p>
     <h1 class="page-hero-title">The people<br>behind the code</h1>
-    <p class="page-hero-desc">Hover to discover. Click to learn more about the developers shaping Zambia's AI-first future.</p>
+    <p class="page-hero-desc">A constellation of builders shaping Zambia's AI-first future. Hover to bring a developer into focus, then click to read their story.</p>
   </section>
 
-  <section class="mindmap">
-    <div class="mindmap-container" id="mindmapContainer">
-      <svg class="mindmap-lines" id="mindmapLines"></svg>
+  <section class="constellation">
+    <div class="constellation-stage" id="stage">
+      <svg class="constellation-lines" id="lines" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+      <div class="hub" aria-hidden="true">
+        <img src="assets/logo.png" alt="Cursor Zambia">
+      </div>
     </div>
   </section>
+  <p class="hint">Hover &middot; Focus &middot; Click to explore</p>
 
-  <!-- Bio Overlay -->
+  <div class="dev-grid" id="devGrid"></div>
+
+  <!-- Bio Modal -->
   <div class="bio-overlay" id="bioOverlay">
     <div class="bio-backdrop" id="bioBackdrop"></div>
     <div class="bio-card">
-      <button class="bio-close" id="bioClose">&times;</button>
+      <button class="bio-close" id="bioClose" aria-label="Close">&times;</button>
       <div class="bio-header">
         <div class="bio-avatar" id="bioAvatar"></div>
         <div>
           <h2 class="bio-name" id="bioName"></h2>
           <p class="bio-role" id="bioRole"></p>
+          <p class="bio-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <span id="bioLocation"></span>
+          </p>
         </div>
+      </div>
+      <div class="bio-stats">
+        <div class="bio-stat"><div class="bio-stat-num" id="bioYears"></div><div class="bio-stat-label">Years</div></div>
+        <div class="bio-stat"><div class="bio-stat-num" id="bioProjects"></div><div class="bio-stat-label">Projects</div></div>
+        <div class="bio-stat"><div class="bio-stat-num" id="bioShipped"></div><div class="bio-stat-label">Built w/ Cursor</div></div>
       </div>
       <p class="bio-text" id="bioText"></p>
       <p class="bio-work-label">SPECIALIZATIONS</p>
@@ -348,90 +370,97 @@
 
   <script>
     const developers = [
-      { initials: 'MK', name: 'Mwila Kayombo', role: 'Full-Stack Engineer', color: '#5a4a3a', bio: 'Mwila has been building web applications for over 6 years. An early Cursor adopter, he now leads workshops teaching AI-assisted development to junior developers across Lusaka.', tags: ['React', 'Node.js', 'AI Agents', 'TypeScript'], github: '#', twitter: '#' },
-      { initials: 'CN', name: 'Chisomo Njovu', role: 'Frontend Developer', color: '#3a4a5a', bio: 'Chisomo specializes in crafting beautiful, accessible user interfaces. She is passionate about design systems and uses Cursor to accelerate her component-driven workflow.', tags: ['Vue.js', 'Tailwind', 'Design Systems', 'A11y'], github: '#', twitter: '#' },
-      { initials: 'BM', name: 'Bwalya Mulenga', role: 'Backend & DevOps', color: '#4a5a3a', bio: 'Bwalya architects scalable backend systems and CI/CD pipelines. He contributes to open-source Cursor extensions and mentors newcomers in cloud infrastructure.', tags: ['Python', 'Docker', 'AWS', 'Cursor Extensions'], github: '#', twitter: '#' },
-      { initials: 'TM', name: 'Thandiwe Musonda', role: 'Mobile Developer', color: '#5a3a4a', bio: 'Thandiwe builds cross-platform mobile apps that serve communities across Zambia. She leverages Cursor for rapid prototyping and AI-powered code generation.', tags: ['React Native', 'Flutter', 'Firebase', 'UI/UX'], github: '#', twitter: '#' },
-      { initials: 'KS', name: 'Kapembwa Simwanza', role: 'Data Engineer', color: '#3a5a4a', bio: 'Kapembwa transforms raw data into actionable insights. He uses Cursor to write ETL pipelines and explore machine learning models for Zambian agritech startups.', tags: ['Python', 'SQL', 'Machine Learning', 'dbt'], github: '#', twitter: '#' },
-      { initials: 'LB', name: 'Lombe Banda', role: 'Creative Technologist', color: '#4a3a5a', bio: 'Lombe sits at the intersection of art and code. She creates interactive web experiences, generative art, and teaches creative coding at community events.', tags: ['Three.js', 'GLSL', 'p5.js', 'Creative Coding'], github: '#', twitter: '#' },
-      { initials: 'DZ', name: 'Dalitso Zulu', role: 'Systems Architect', color: '#5a4a3a', bio: 'Dalitso designs distributed systems for fintech products. With 10+ years of experience, he provides architectural guidance to community projects and startups.', tags: ['Go', 'Microservices', 'gRPC', 'System Design'], github: '#', twitter: '#' },
-      { initials: 'NM', name: 'Natasha Mwape', role: 'QA & Automation', color: '#3a4a4a', bio: 'Natasha ensures quality at every level. She builds automated testing frameworks with Cursor and advocates for test-driven development in the community.', tags: ['Playwright', 'Cypress', 'Jest', 'CI/CD'], github: '#', twitter: '#' },
-      { initials: 'SM', name: 'Sampa Mumba', role: 'Blockchain Developer', color: '#4a4a3a', bio: 'Sampa is pioneering blockchain solutions for supply chain transparency in Zambia. He uses Cursor to rapidly iterate on smart contracts and dApps.', tags: ['Solidity', 'Rust', 'Web3', 'Smart Contracts'], github: '#', twitter: '#' },
+      { initials: 'MK', name: 'Mwila Kayombo', role: 'Full-Stack Engineer', location: 'Lusaka', grad: ['#6b5a45','#2c2418'], years: 6, projects: 24, shipped: 18, bio: 'Mwila has been building web applications for over six years. An early Cursor adopter, he now leads workshops teaching AI-assisted development to junior developers across Lusaka.', tags: ['React', 'Node.js', 'AI Agents', 'TypeScript'], github: '#', twitter: '#' },
+      { initials: 'CN', name: 'Chisomo Njovu', role: 'Frontend Developer', location: 'Lusaka', grad: ['#3a4a5a','#1c2530'], years: 4, projects: 19, shipped: 15, bio: 'Chisomo specializes in crafting beautiful, accessible user interfaces. She is passionate about design systems and uses Cursor to accelerate her component-driven workflow.', tags: ['Vue.js', 'Tailwind', 'Design Systems', 'A11y'], github: '#', twitter: '#' },
+      { initials: 'BM', name: 'Bwalya Mulenga', role: 'Backend & DevOps', location: 'Ndola', grad: ['#4a5a3a','#222a18'], years: 5, projects: 21, shipped: 16, bio: 'Bwalya architects scalable backend systems and CI/CD pipelines. He contributes to open-source Cursor extensions and mentors newcomers in cloud infrastructure.', tags: ['Python', 'Docker', 'AWS', 'Extensions'], github: '#', twitter: '#' },
+      { initials: 'TM', name: 'Thandiwe Musonda', role: 'Mobile Developer', location: 'Lusaka', grad: ['#5a3a4a','#2a1820'], years: 4, projects: 17, shipped: 14, bio: 'Thandiwe builds cross-platform mobile apps that serve communities across Zambia. She leverages Cursor for rapid prototyping and AI-powered code generation.', tags: ['React Native', 'Flutter', 'Firebase', 'UI/UX'], github: '#', twitter: '#' },
+      { initials: 'KS', name: 'Kapembwa Simwanza', role: 'Data Engineer', location: 'Kitwe', grad: ['#3a5a4a','#182a22'], years: 5, projects: 15, shipped: 12, bio: 'Kapembwa transforms raw data into actionable insights. He uses Cursor to write ETL pipelines and explore machine learning models for Zambian agritech startups.', tags: ['Python', 'SQL', 'Machine Learning', 'dbt'], github: '#', twitter: '#' },
+      { initials: 'LB', name: 'Lombe Banda', role: 'Creative Technologist', location: 'Lusaka', grad: ['#4a3a5a','#221830'], years: 3, projects: 13, shipped: 11, bio: 'Lombe sits at the intersection of art and code. She creates interactive web experiences, generative art, and teaches creative coding at community events.', tags: ['Three.js', 'GLSL', 'p5.js', 'Creative Coding'], github: '#', twitter: '#' },
+      { initials: 'DZ', name: 'Dalitso Zulu', role: 'Systems Architect', location: 'Lusaka', grad: ['#5a4a3a','#2a2018'], years: 10, projects: 32, shipped: 20, bio: 'Dalitso designs distributed systems for fintech products. With over a decade of experience, he provides architectural guidance to community projects and startups.', tags: ['Go', 'Microservices', 'gRPC', 'System Design'], github: '#', twitter: '#' },
+      { initials: 'NM', name: 'Natasha Mwape', role: 'QA & Automation', location: 'Livingstone', grad: ['#3a4a4a','#182222'], years: 4, projects: 16, shipped: 13, bio: 'Natasha ensures quality at every level. She builds automated testing frameworks with Cursor and advocates for test-driven development in the community.', tags: ['Playwright', 'Cypress', 'Jest', 'CI/CD'], github: '#', twitter: '#' },
     ];
 
-    const positions = [
-      { x: 50, y: 50, size: 110 },
-      { x: 22, y: 25, size: 90 },
-      { x: 78, y: 20, size: 95 },
-      { x: 15, y: 60, size: 85 },
-      { x: 85, y: 55, size: 88 },
-      { x: 35, y: 82, size: 80 },
-      { x: 68, y: 80, size: 82 },
-      { x: 8, y: 88, size: 75 },
-      { x: 92, y: 88, size: 78 },
-    ];
-
-    const container = document.getElementById('mindmapContainer');
-    const linesEl = document.getElementById('mindmapLines');
+    // Even radial layout around the hub
+    const stage = document.getElementById('stage');
+    const lines = document.getElementById('lines');
     const overlay = document.getElementById('bioOverlay');
+    const grid = document.getElementById('devGrid');
 
-    // Create nodes
+    const count = developers.length;
+    const radius = 38; // percent
+    const sizes = [104, 92, 96, 88, 94, 86, 100, 90];
+
     developers.forEach((dev, i) => {
-      const pos = positions[i];
+      const angle = (-90 + (360 / count) * i) * (Math.PI / 180);
+      const xp = 50 + radius * Math.cos(angle);
+      const yp = 50 + radius * Math.sin(angle);
+      const size = sizes[i % sizes.length];
+
+      // connection line
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', 50);
+      line.setAttribute('y1', 50);
+      line.setAttribute('x2', xp);
+      line.setAttribute('y2', yp);
+      lines.appendChild(line);
+
+      // node
       const node = document.createElement('div');
       node.className = 'dev-node';
-      node.style.width = pos.size + 'px';
-      node.style.height = pos.size + 'px';
-      node.style.left = `calc(${pos.x}% - ${pos.size / 2}px)`;
-      node.style.top = `calc(${pos.y}% - ${pos.size / 2}px)`;
-
+      node.style.width = size + 'px';
+      node.style.height = size + 'px';
+      node.style.left = `calc(${xp}% - ${size / 2}px)`;
+      node.style.top = `calc(${yp}% - ${size / 2}px)`;
+      node.style.animationDelay = (i * 0.6) + 's';
+      node.style.fontSize = (size * 0.26) + 'px';
       node.innerHTML = `
-        <div class="avatar" style="background:${dev.color}">${dev.initials}</div>
-        <span class="name-tag">${dev.name.split(' ')[0]}</span>
+        <div class="avatar" style="background:linear-gradient(135deg, ${dev.grad[0]}, ${dev.grad[1]})">${dev.initials}</div>
+        <span class="name-tag">${dev.name.split(' ')[0]}<small>${dev.role}</small></span>
       `;
-
       node.addEventListener('click', () => openBio(dev));
-      container.appendChild(node);
-    });
+      stage.appendChild(node);
 
-    // Draw connection lines
-    const centerIdx = 0;
-    const cx = positions[centerIdx].x;
-    const cy = positions[centerIdx].y;
-    positions.forEach((pos, i) => {
-      if (i === centerIdx) return;
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', cx + '%');
-      line.setAttribute('y1', cy + '%');
-      line.setAttribute('x2', pos.x + '%');
-      line.setAttribute('y2', pos.y + '%');
-      linesEl.appendChild(line);
+      // grid card (mobile)
+      const card = document.createElement('div');
+      card.className = 'dev-grid-card';
+      card.innerHTML = `
+        <div class="avatar" style="background:linear-gradient(135deg, ${dev.grad[0]}, ${dev.grad[1]})">${dev.initials}</div>
+        <div class="gc-name">${dev.name.split(' ')[0]}</div>
+        <div class="gc-role">${dev.role}</div>
+      `;
+      card.addEventListener('click', () => openBio(dev));
+      grid.appendChild(card);
     });
 
     function openBio(dev) {
-      document.getElementById('bioAvatar').style.background = dev.color;
-      document.getElementById('bioAvatar').textContent = dev.initials;
+      const av = document.getElementById('bioAvatar');
+      av.style.background = `linear-gradient(135deg, ${dev.grad[0]}, ${dev.grad[1]})`;
+      av.textContent = dev.initials;
       document.getElementById('bioName').textContent = dev.name;
       document.getElementById('bioRole').textContent = dev.role;
+      document.getElementById('bioLocation').textContent = dev.location + ', Zambia';
+      document.getElementById('bioYears').textContent = dev.years + '+';
+      document.getElementById('bioProjects').textContent = dev.projects;
+      document.getElementById('bioShipped').textContent = dev.shipped;
       document.getElementById('bioText').textContent = dev.bio;
-
-      const tagsEl = document.getElementById('bioTags');
-      tagsEl.innerHTML = dev.tags.map(t => `<span class="bio-tag">${t}</span>`).join('');
-
-      const linksEl = document.getElementById('bioLinks');
-      linksEl.innerHTML = `
+      document.getElementById('bioTags').innerHTML = dev.tags.map(t => `<span class="bio-tag">${t}</span>`).join('');
+      document.getElementById('bioLinks').innerHTML = `
         <a href="${dev.github}" class="bio-link">GitHub</a>
         <a href="${dev.twitter}" class="bio-link">X / Twitter</a>
       `;
-
       overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
 
-    document.getElementById('bioClose').addEventListener('click', () => overlay.classList.remove('active'));
-    document.getElementById('bioBackdrop').addEventListener('click', () => overlay.classList.remove('active'));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.classList.remove('active'); });
+    function closeBio() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
 
-    document.getElementById('nav').classList.add('scrolled');
+    document.getElementById('bioClose').addEventListener('click', closeBio);
+    document.getElementById('bioBackdrop').addEventListener('click', closeBio);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeBio(); });
   </script>
+  <script src="main.js"></script>
 </body>
 </html>
