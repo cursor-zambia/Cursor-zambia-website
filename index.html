@@ -13,7 +13,7 @@
 <body>
 
   <!-- Navigation -->
-  <nav class="nav" id="nav">
+  <nav class="nav nav--dark" id="nav">
     <div class="nav-left">
       <a href="#events" class="nav-link">EVENTS</a>
       <a href="#community" class="nav-link">COMMUNITY</a>
@@ -30,23 +30,42 @@
 
   <!-- Hero -->
   <header class="hero" id="hero">
+    <div class="hero-background">
+      <img src="assets/hero-lusaka-skyline.png" alt="Lusaka Skyline">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-grain"></div>
+    
     <div class="hero-inner">
-      <div class="hero-logo-mark">
-        <img src="assets/logo.png" alt="Cursor Zambia" class="hero-logo-img">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span class="hero-badge-text">Lusaka, Zambia / Est. 2025</span>
       </div>
-      <div class="hero-text">
-        <p class="hero-room">LUSAKA, ZAMBIA / EST. 2025</p>
-        <h1 class="hero-title">Building the Future<br>with AI-Powered Code</h1>
-        <p class="hero-desc">
-          The official Cursor community in Zambia. We bring together developers,<br>
-          designers, and creators to explore the new era of AI-assisted development.
-        </p>
+      
+      <h1 class="hero-title">
+        <span>Building the Future</span>
+        <span class="highlight">with AI-Powered Code</span>
+      </h1>
+      
+      <p class="hero-desc">
+        The official Cursor community in Zambia. We bring together developers,
+        designers, and creators to explore the new era of AI-assisted development.
+      </p>
+      
+      <div class="hero-actions">
+        <a href="https://chat.whatsapp.com/I1UkLFpUMJj791DA07cmBk" target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn--primary">
+          Join the Community
+        </a>
+        <a href="#events" class="hero-btn hero-btn--secondary">
+          Explore Events
+        </a>
       </div>
     </div>
-    <a href="#events" class="hero-scroll-cue" aria-label="Scroll to events">
-      <span>Scroll</span>
-      <span class="scroll-track"></span>
-    </a>
+    
+    <div class="hero-scroll">
+      <span class="hero-scroll-text">Scroll</span>
+      <span class="hero-scroll-line"></span>
+    </div>
   </header>
 
   <!-- Featured Events -->
@@ -115,7 +134,7 @@
 
   <!-- Community Showcase -->
   <section class="showcase" id="community">
-    <div class="section-label">
+    <div class="section-label" data-animate>
       <span class="label-line"></span>
       <span class="label-text">COMMUNITY SHOWCASE</span>
     </div>

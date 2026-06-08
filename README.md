@@ -1,4 +1,4 @@
-# Cursor Zambia Community — Landing Page
+# Cursor Zambia Community Landing Page
 
 Static single-page site (HTML/CSS/JS) with:
 - Cursor-like dark styling + neon accent
