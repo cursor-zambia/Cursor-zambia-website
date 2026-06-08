@@ -151,29 +151,27 @@ img {
 
 .nav-logo {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-self: center;
-  line-height: 1;
 }
 
-.logo-text {
-  font-family: var(--font-sans);
-  font-size: 1.1rem;
-  font-weight: 500;
-  letter-spacing: 0.3em;
-  color: var(--color-accent);
-  transition: color 0.4s var(--ease-out-expo);
+.nav-logo-img {
+  height: 36px;
+  width: auto;
+  border-radius: 8px;
+  transition: all 0.4s var(--ease-out-expo);
 }
 
-.logo-sub {
-  font-family: var(--font-serif);
-  font-size: 0.85rem;
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  color: var(--color-text-light);
-  margin-top: 2px;
-  transition: color 0.4s var(--ease-out-expo);
+.nav-logo-img:hover {
+  transform: scale(1.05);
+}
+
+.nav--dark .nav-logo-img {
+  filter: brightness(0) invert(1);
+}
+
+.nav.scrolled .nav-logo-img {
+  filter: none;
 }
 
 /* =========================================
